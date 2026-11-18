@@ -17,6 +17,7 @@
   --red: #ff4655;
   --red2: #c52f3c;
   --green: #61d6a3;
+  --gold: #f5b942;
   --radius: 16px;
 }
 * { box-sizing: border-box; }
@@ -69,6 +70,7 @@ button { cursor: pointer; }
 .span8 { grid-column: span 8; }
 .span6 { grid-column: span 6; }
 .span4 { grid-column: span 4; }
+.span3 { grid-column: span 3; }
 .section-title { font-size: 18px; margin: 0 0 5px; }
 .sub { color: var(--muted); font-size: 13px; margin: 0 0 18px; }
 
@@ -83,17 +85,39 @@ button { cursor: pointer; }
 .nick-row { display: flex; gap: 10px; }
 .nick-row input { flex: 1; }
 
-/* Card de prévia da conta Riot */
+/* Card de prévia da conta Riot + Mapa Destaque */
 .riot-preview {
-  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
   background: #141419; border: 1px solid var(--line); border-radius: 12px;
-  padding: 12px 16px; margin-bottom: 18px; flex-wrap: wrap;
+  padding: 14px 16px; margin-bottom: 18px; flex-wrap: wrap;
 }
-.riot-preview.verified { border-color: var(--green); background: rgba(97, 214, 163, 0.06); }
+.riot-preview.verified { border-color: var(--green); background: rgba(97, 214, 163, 0.05); }
 .riot-user { display: flex; align-items: center; gap: 12px; }
-.riot-user img { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; background: #23232c; }
+.riot-user img { width: 46px; height: 46px; border-radius: 10px; object-fit: cover; background: #23232c; }
+.riot-stats-group { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .riot-rank { display: flex; align-items: center; gap: 10px; }
 .riot-rank img { width: 38px; height: 38px; object-fit: contain; }
+.highlight-badge {
+  background: linear-gradient(135deg, rgba(245, 185, 66, 0.16), rgba(255, 70, 85, 0.12));
+  border: 1px solid rgba(245, 185, 66, 0.45);
+  border-radius: 10px; padding: 8px 12px;
+}
+.highlight-badge small { display: block; font-size: 10px; font-weight: 800; letter-spacing: .12em; color: var(--gold); }
+.highlight-badge strong { font-size: 14px; color: #fff; }
+
+/* Card de Mapa Destaque no Dashboard */
+.featured-map-card {
+  background: linear-gradient(135deg, #241920 0%, #18181f 65%);
+  border: 1px solid rgba(255, 70, 85, 0.45);
+  position: relative; overflow: hidden;
+}
+.featured-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(245, 185, 66, 0.15); border: 1px solid rgba(245, 185, 66, 0.4);
+  color: var(--gold); font-size: 11px; font-weight: 800; letter-spacing: .1em;
+  padding: 4px 10px; border-radius: 999px; margin-bottom: 10px;
+}
+.featured-map-name { font-size: 30px; font-weight: 950; letter-spacing: -.03em; margin: 0; }
 
 /* Seletor de Roles */
 .role-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
@@ -118,7 +142,8 @@ button { cursor: pointer; }
   padding: 12px; display: flex; flex-direction: column; gap: 10px; transition: .15s;
 }
 .map-card.filled { border-color: #454552; }
-.map-head { display: flex; justify-content: space-between; align-items: center; }
+.map-card.top-recent { border-color: rgba(245, 185, 66, 0.55); }
+.map-head { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
 .map-head span { font-size: 12px; font-weight: 850; letter-spacing: .08em; }
 .agent-trigger {
   display: flex; align-items: center; gap: 12px; width: 100%;
@@ -183,11 +208,12 @@ button { cursor: pointer; }
 .metric { font-size: 32px; font-weight: 900; letter-spacing: -.04em; }
 .metric-label { font-size: 12px; color: var(--muted); }
 .bar-row {
-  display: grid; grid-template-columns: 105px 1fr 52px;
+  display: grid; grid-template-columns: 105px 1fr 56px;
   align-items: center; gap: 10px; margin: 12px 0; font-size: 13px;
 }
 .bar { height: 9px; background: #303039; border-radius: 20px; overflow: hidden; }
 .bar i { height: 100%; display: block; background: var(--red); border-radius: 20px; }
+.bar i.gold { background: var(--gold); }
 .rank {
   display: flex; align-items: center; justify-content: space-between;
   border-bottom: 1px solid var(--line); padding: 10px 0;
@@ -199,7 +225,8 @@ button { cursor: pointer; }
   border: 1px solid var(--line); border-radius: 999px;
   padding: 4px 9px; color: var(--muted); font-size: 11px;
 }
-.player-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.pill.gold { border-color: rgba(245, 185, 66, 0.5); color: var(--gold); }
+.player-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); gap: 10px; }
 .player {
   padding: 13px; background: #141419; border: 1px solid var(--line);
   border-radius: 12px; text-align: left; color: var(--text); transition: .15s;
@@ -216,6 +243,7 @@ button { cursor: pointer; }
   background: #141419; border: 1px solid var(--line); padding: 10px;
   border-radius: 11px; display: flex; align-items: center; gap: 10px;
 }
+.profile-map.featured { border-color: rgba(245, 185, 66, 0.55); background: rgba(245, 185, 66, 0.05); }
 .profile-map img { width: 38px; height: 38px; border-radius: 8px; background: #23232c; }
 .profile-map small { display: block; color: var(--muted); font-size: 11px; }
 .profile-map b { display: block; font-size: 13px; }
@@ -234,7 +262,7 @@ button { cursor: pointer; }
   .wrap { padding: 16px; }
   .hero { display: block; padding-top: 28px; }
   .status { display: inline-block; margin-top: 18px; }
-  .span8, .span6, .span4 { grid-column: span 12; }
+  .span8, .span6, .span4, .span3 { grid-column: span 12; }
   .role-grid { grid-template-columns: repeat(2, 1fr); }
   .nick-row { flex-direction: column; }
   .top { align-items: flex-start; flex-direction: column; }
@@ -260,7 +288,7 @@ button { cursor: pointer; }
     <div>
       <div class="eyebrow">KNOW YOUR TEAM.</div>
       <h1>MAPAS. AGENTES.<br><span style="color:var(--red)">ESTRATÉGIA.</span></h1>
-      <p>Sincronize sua conta Valorant para puxar seu Elo e sugerir automaticamente seus agentes principais por mapa.</p>
+      <p>Sincronize sua conta Valorant para puxar seu Elo, identificar seu mapa destaque recente e preencher seus agentes principais.</p>
     </div>
     <div class="status" id="connection"><b>●</b> Modo demonstração</div>
   </section>
@@ -270,7 +298,7 @@ button { cursor: pointer; }
     <section id="survey" class="view grid">
       <div class="card span12">
         <h2 class="section-title">Pesquisa do jogador</h2>
-        <p class="sub">Digite seu Riot ID e clique em <b>Buscar Perfil</b> para carregar seu Elo e preencher seus agentes recentes.</p>
+        <p class="sub">Digite seu Riot ID e clique em <b>Buscar Perfil</b> para carregar seu Elo, mapa destaque e agentes recentes.</p>
         <div class="notice" id="setupNotice">Modo local ativo. Configure o Supabase para sincronizar entre dispositivos.</div>
 
         <form id="surveyForm">
@@ -282,7 +310,7 @@ button { cursor: pointer; }
             </div>
           </div>
 
-          <!-- Prévia do Perfil Valorant -->
+          <!-- Prévia do Perfil Valorant + Mapa Destaque Individual -->
           <div id="riotPreview" class="riot-preview hidden">
             <div class="riot-user">
               <img id="riotCardImg" src="" alt="Card">
@@ -291,11 +319,17 @@ button { cursor: pointer; }
                 <small class="muted" id="riotLevelText" style="display:block">Nível -- · Região BR</small>
               </div>
             </div>
-            <div class="riot-rank">
-              <img id="riotRankImg" src="" alt="Elo">
-              <div>
-                <small class="muted" style="display:block;font-size:11px">ELO ATUAL</small>
-                <strong id="riotRankName">Sem Rank</strong>
+            <div class="riot-stats-group">
+              <div class="highlight-badge" id="riotTopMapBadge">
+                <small>★ MAPA DESTAQUE RECENTE</small>
+                <strong id="riotTopMapText">—</strong>
+              </div>
+              <div class="riot-rank">
+                <img id="riotRankImg" src="" alt="Elo">
+                <div>
+                  <small class="muted" style="display:block;font-size:11px">ELO ATUAL</small>
+                  <strong id="riotRankName">Sem Rank</strong>
+                </div>
               </div>
             </div>
           </div>
@@ -326,7 +360,7 @@ button { cursor: pointer; }
 
           <div class="actions" style="margin-top:24px">
             <button class="btn primary" type="submit">Enviar minha resposta ↗</button>
-            <span class="hint">Suas escolhas e seu Elo ficarão visíveis no dashboard do time.</span>
+            <span class="hint">Suas escolhas, Elo e mapa destaque ficarão visíveis no dashboard do time.</span>
           </div>
         </form>
       </div>
@@ -338,47 +372,56 @@ button { cursor: pointer; }
         <div class="profile-head">
           <div>
             <h2 class="section-title">Visão geral do time</h2>
-            <p class="sub" style="margin-bottom:0">Preferências, elos, funções e agentes consolidados de todos os jogadores.</p>
+            <p class="sub" style="margin-bottom:0">Preferências, elos, funções e histórico recente consolidados do elenco.</p>
           </div>
           <span class="pill" id="responseCount">0 respostas</span>
         </div>
       </div>
 
-      <div class="card span4">
-        <div class="metric" id="playersMetric">0</div>
-        <div class="metric-label">JOGADORES PARTICIPANTES</div>
-      </div>
-      <div class="card span4">
-        <div class="metric">7</div>
-        <div class="metric-label">MAPAS ANALISADOS</div>
-      </div>
-      <div class="card span4">
-        <div class="metric" id="agentsMetric">0</div>
-        <div class="metric-label">AGENTES DIFERENTES ESCOLHIDOS</div>
+      <!-- Card Mapa Destaque do Time -->
+      <div class="card span6 featured-map-card">
+        <div class="featured-tag">★ MAPA DESTAQUE DO TIME (RECENTE)</div>
+        <h3 class="featured-map-name" id="teamFeaturedMap">—</h3>
+        <p class="sub" id="teamFeaturedSub" style="margin-top:6px;margin-bottom:0">Aguardando jogadores sincronizarem suas partidas.</p>
       </div>
 
+      <div class="card span3">
+        <div class="metric" id="playersMetric">0</div>
+        <div class="metric-label">JOGADORES NO ELENCO</div>
+      </div>
+      <div class="card span3">
+        <div class="metric" id="agentsMetric">0</div>
+        <div class="metric-label">AGENTES DISTINTOS</div>
+      </div>
+
+      <div class="card span6">
+        <h3 class="section-title">Mapas mais jogados recentemente</h3>
+        <p class="sub">Volume total de partidas recentes do time por mapa.</p>
+        <div id="recentMapsRanking"></div>
+      </div>
       <div class="card span6">
         <h3 class="section-title">Funções (Roles) do time</h3>
         <p class="sub">Distribuição da função principal de cada jogador.</p>
         <div id="roleRanking"></div>
       </div>
+
       <div class="card span6">
         <h3 class="section-title">Agente mais escolhido por mapa</h3>
         <p class="sub">Destaque de pick principal em cada cenário.</p>
         <div id="agentRanking"></div>
       </div>
-
-      <div class="card span4">
-        <h3 class="section-title">Melhor desempenho</h3>
-        <p class="sub">Onde o time rende mais.</p>
+      <div class="card span6">
+        <h3 class="section-title">Melhor desempenho declarado</h3>
+        <p class="sub">Onde os jogadores acreditam render mais.</p>
         <div id="bestRanking"></div>
       </div>
-      <div class="card span4">
+
+      <div class="card span6">
         <h3 class="section-title">Mapas favoritos</h3>
         <p class="sub">Mais votados para jogar.</p>
         <div id="favoriteRanking"></div>
       </div>
-      <div class="card span4">
+      <div class="card span6">
         <h3 class="section-title">Menos favoritos</h3>
         <p class="sub">Maior rejeição do time.</p>
         <div id="leastRanking"></div>
@@ -386,7 +429,7 @@ button { cursor: pointer; }
 
       <div class="card span12">
         <h3 class="section-title">Perfis dos jogadores</h3>
-        <p class="sub">Clique em um jogador para ver seu Elo, função e pool de agentes por mapa.</p>
+        <p class="sub">Clique em um jogador para ver seu Elo, mapa destaque recente, função e pool de agentes.</p>
         <div class="player-list" id="playerList"></div>
         <div id="playerProfile" style="margin-top:18px"></div>
       </div>
@@ -394,7 +437,7 @@ button { cursor: pointer; }
       <div class="card span12">
         <div class="actions">
           <button class="btn" id="exportBtn">Exportar respostas (CSV)</button>
-          <span class="hint">Exporta nickname, elo, função principal, mapas e agentes escolhidos.</span>
+          <span class="hint">Exporta nickname, elo, mapa destaque recente, função principal, mapas e agentes.</span>
         </div>
       </div>
     </section>
@@ -431,9 +474,9 @@ button { cursor: pointer; }
 const SUPABASE_URL = 'https://pdhbjuxdiulaarbyjaak.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_hkqIOaaPiVmqK10wmOAKWg_odZ6LIE4';
 
-// Cole sua chave gratuita da HenrikDev API aqui (ex: 'HDEV-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx')
-const HENRIK_API_KEY = 'HDEV-be01e91e-fb7f-46c3-bd90-c802fb6cd985';
-const REGION = 'br'; // 'br', 'na', 'eu', 'ap', 'kr', 'latam'
+// Cole sua chave gratuita da HenrikDev API aqui
+const HENRIK_API_KEY = 'COLE_SUA_CHAVE_HENRIKDEV_AQUI';
+const REGION = 'br';
 // ================================================
 
 const MAPS = ['Abyss', 'Bind', 'Corrode', 'Haven', 'Lotus', 'Sunset', 'Summit'];
@@ -470,11 +513,11 @@ let responses = [];
 let selectedPlayer = null;
 let selectedRole = '';
 let selectedMapAgents = {};
-let suggestedMaps = {}; // Marca quais mapas foram preenchidos automaticamente pela API
+let suggestedMaps = {};
 let activeModalMap = null;
 let activeRoleFilter = 'ALL';
 let agentIcons = {};
-let fetchedRiotProfile = null; // { name, tag, rankTier, rankIcon }
+let fetchedRiotProfile = null; // { name, tag, rankTier, rankIcon, topMap, mapStats }
 
 function toast(msg) {
   const t = $('#toast');
@@ -506,7 +549,7 @@ async function fetchValorantProfile() {
   btn.textContent = 'Buscando...';
 
   try {
-    // 1. Busca dados básicos da conta (Nome oficial, Nível, Card)
+    // 1. Dados da conta
     const accRes = await fetch(`https://api.henrikdev.xyz/valorant/v1/account/${name}/${tag}`, { headers });
     const accJson = await accRes.json();
 
@@ -518,7 +561,7 @@ async function fetchValorantProfile() {
     const officialNick = `${acc.name}#${acc.tag}`;
     $('#nickname').value = officialNick;
 
-    // 2. Busca Elo atual (MMR)
+    // 2. Elo atual (MMR)
     let rankTier = 'Unranked';
     let rankIcon = '';
     try {
@@ -530,36 +573,37 @@ async function fetchValorantProfile() {
       }
     } catch {}
 
-    fetchedRiotProfile = { name: acc.name, tag: acc.tag, rankTier, rankIcon };
+    // 3. Últimas 20 partidas (para mapas mais jogados, winrate e agentes)
+    let topMap = '';
+    let mapStats = {}; // { Haven: { played: 5, wins: 3 } }
+    const mapAgentCounts = {};
+    const roleCounts = {};
 
-    // Atualiza card visual no formulário
-    $('#riotCardImg').src = acc.card?.small || '';
-    $('#riotFullNick').textContent = officialNick;
-    $('#riotLevelText').textContent = `Nível ${acc.account_level || '—'} · Região ${acc.region?.toUpperCase() || 'BR'}`;
-    $('#riotRankName').textContent = rankTier;
-    if (rankIcon) {
-      $('#riotRankImg').src = rankIcon;
-      $('#riotRankImg').classList.remove('hidden');
-    } else {
-      $('#riotRankImg').classList.add('hidden');
-    }
-    $('#riotPreview').classList.add('verified');
-    $('#riotPreview').classList.remove('hidden');
-
-    // 3. Busca últimas partidas para sugerir agentes por mapa e role mais jogada
     try {
-      const matchRes = await fetch(`https://api.henrikdev.xyz/valorant/v3/matches/${REGION}/${name}/${tag}?size=15`, { headers });
+      const matchRes = await fetch(`https://api.henrikdev.xyz/valorant/v3/matches/${REGION}/${name}/${tag}?size=20`, { headers });
       const matchJson = await matchRes.json();
-      if (matchRes.status === 200 && Array.isArray(matchJson.data)) {
-        const mapAgentCounts = {}; // { Haven: { Jett: 3, Omen: 1 } }
-        const roleCounts = {};
 
+      if (matchRes.status === 200 && Array.isArray(matchJson.data)) {
         matchJson.data.forEach(match => {
           const mapName = match.metadata?.map;
+          const mode = match.metadata?.mode;
+          if (!mapName || mode === 'Deathmatch' || mode === 'Custom Game') return;
+
           const me = match.players?.all_players?.find(
             p => p.name.toLowerCase() === acc.name.toLowerCase() && p.tag.toLowerCase() === acc.tag.toLowerCase()
           );
-          if (me && me.character) {
+          if (!me) return;
+
+          // Contabiliza partidas e vitórias no mapa
+          const myTeam = me.team?.toLowerCase(); // 'red' ou 'blue'
+          const won = myTeam && match.teams?.[myTeam]?.has_won === true;
+
+          mapStats[mapName] = mapStats[mapName] || { played: 0, wins: 0 };
+          mapStats[mapName].played += 1;
+          if (won) mapStats[mapName].wins += 1;
+
+          // Contabiliza agente e role
+          if (me.character) {
             const agent = me.character;
             const role = getAgentRole(agent);
             if (role) roleCounts[role] = (roleCounts[role] || 0) + 1;
@@ -571,35 +615,62 @@ async function fetchValorantProfile() {
           }
         });
 
-        // Preenche mapas que ainda não foram escolhidos manualmente
-        let autoFilledCount = 0;
+        // Descobre o mapa mais jogado recentemente (desempate por vitórias)
+        const sortedMaps = Object.entries(mapStats).sort((a, b) => (b[1].played - a[1].played) || (b[1].wins - a[1].wins));
+        if (sortedMaps.length) {
+          topMap = sortedMaps[0][0];
+        }
+
+        // Preenche agentes sugeridos
         MAPS.forEach(m => {
           if (!selectedMapAgents[m] && mapAgentCounts[m]) {
             const topAgent = Object.entries(mapAgentCounts[m]).sort((a, b) => b[1] - a[1])[0][0];
             if (AGENTS_DATA.some(a => a.name.toLowerCase() === topAgent.toLowerCase())) {
               selectedMapAgents[m] = topAgent;
               suggestedMaps[m] = true;
-              autoFilledCount++;
             }
           }
         });
 
-        // Sugere a role mais jogada se o usuário ainda não clicou em nenhuma
+        // Preenche role mais jogada se ainda não selecionada
         if (!selectedRole && Object.keys(roleCounts).length) {
           selectedRole = Object.entries(roleCounts).sort((a, b) => b[1] - a[1])[0][0];
           renderRoleSelector();
         }
-
-        renderMapCards();
-        toast(autoFilledCount
-          ? `Perfil carregado! ${autoFilledCount} mapa(s) preenchidos com base no seu histórico.`
-          : 'Perfil e Elo carregados com sucesso!');
-      } else {
-        toast('Perfil e Elo carregados com sucesso!');
       }
-    } catch {
-      toast('Perfil e Elo carregados!');
+    } catch {}
+
+    fetchedRiotProfile = { name: acc.name, tag: acc.tag, rankTier, rankIcon, topMap, mapStats };
+
+    // Atualiza UI do card de prévia
+    $('#riotCardImg').src = acc.card?.small || '';
+    $('#riotFullNick').textContent = officialNick;
+    $('#riotLevelText').textContent = `Nível ${acc.account_level || '—'} · Região ${acc.region?.toUpperCase() || 'BR'}`;
+    $('#riotRankName').textContent = rankTier;
+
+    if (rankIcon) {
+      $('#riotRankImg').src = rankIcon;
+      $('#riotRankImg').classList.remove('hidden');
+    } else {
+      $('#riotRankImg').classList.add('hidden');
     }
+
+    if (topMap && mapStats[topMap]) {
+      const st = mapStats[topMap];
+      const wr = Math.round((st.wins / st.played) * 100);
+      $('#riotTopMapText').textContent = `${topMap} (${st.played} jogos · ${wr}% WR)`;
+      $('#riotTopMapBadge').classList.remove('hidden');
+    } else {
+      $('#riotTopMapBadge').classList.add('hidden');
+    }
+
+    $('#riotPreview').classList.add('verified');
+    $('#riotPreview').classList.remove('hidden');
+    renderMapCards();
+
+    toast(topMap
+      ? `Perfil carregado! Seu mapa mais jogado recentemente é ${topMap}.`
+      : 'Perfil e Elo carregados com sucesso!');
   } catch (err) {
     toast(err.message || 'Erro ao consultar a API do Valorant.');
   } finally {
@@ -660,16 +731,24 @@ function renderRoleSelector() {
 }
 
 function renderMapCards() {
+  const topRecent = fetchedRiotProfile?.topMap || '';
+
   $('#agentFields').innerHTML = MAPS.map(m => {
     const chosen = selectedMapAgents[m] || '';
     const icon = getAgentIcon(chosen);
     const role = getAgentRole(chosen);
     const isAuto = suggestedMaps[m];
+    const isTopMap = topRecent && topRecent.toLowerCase() === m.toLowerCase();
+    const stats = fetchedRiotProfile?.mapStats?.[m];
+
     return `
-      <div class="map-card ${chosen ? 'filled' : ''}">
+      <div class="map-card ${chosen ? 'filled' : ''} ${isTopMap ? 'top-recent' : ''}">
         <div class="map-head">
-          <span>${m.toUpperCase()}</span>
-          ${role ? `<span class="pill">${isAuto ? '★ ' : ''}${role}</span>` : ''}
+          <span>${m.toUpperCase()} ${isTopMap ? '🔥' : ''}</span>
+          ${role
+            ? `<span class="pill ${isTopMap ? 'gold' : ''}">${isAuto ? '★ ' : ''}${role}</span>`
+            : (stats ? `<span class="pill">${stats.played}x jogado</span>` : '')
+          }
         </div>
         <button type="button" class="agent-trigger" data-open-map="${m}">
           ${icon
@@ -678,7 +757,11 @@ function renderMapCards() {
           }
           <div class="agent-info">
             <strong>${chosen ? esc(chosen) : 'Selecionar agente'}</strong>
-            <small>${chosen ? (isAuto ? 'Sugerido do histórico · Trocar' : 'Clique para trocar') : 'Escolha seu main neste mapa'}</small>
+            <small>${
+              stats
+                ? `${stats.played} partida(s) recente(s) · Trocar`
+                : (chosen ? 'Clique para trocar' : 'Escolha seu main neste mapa')
+            }</small>
           </div>
         </button>
       </div>
@@ -818,6 +901,48 @@ function renderDashboard() {
   );
   $('#agentsMetric').textContent = agents.size;
 
+  // Calcula mapas mais jogados recentemente pelo time todo
+  const teamRecentTotals = {}; // { Haven: { played: 14, wins: 8 } }
+  responses.forEach(r => {
+    const stats = r.recent_map_stats || r.agents?._mapStats;
+    if (stats && typeof stats === 'object') {
+      Object.entries(stats).forEach(([mapName, obj]) => {
+        teamRecentTotals[mapName] = teamRecentTotals[mapName] || { played: 0, wins: 0 };
+        teamRecentTotals[mapName].played += Number(obj.played || 0);
+        teamRecentTotals[mapName].wins += Number(obj.wins || 0);
+      });
+    } else {
+      // Fallback caso o jogador tenha salvo apenas o nome do mapa destaque
+      const singleTop = r.recent_top_map || r.agents?._topMap;
+      if (singleTop) {
+        teamRecentTotals[singleTop] = teamRecentTotals[singleTop] || { played: 0, wins: 0 };
+        teamRecentTotals[singleTop].played += 1;
+      }
+    }
+  });
+
+  const sortedRecent = Object.entries(teamRecentTotals).sort((a, b) => b[1].played - a[1].played);
+
+  if (sortedRecent.length) {
+    const [topName, topData] = sortedRecent[0];
+    const wrText = topData.wins > 0 ? ` · ${Math.round((topData.wins / topData.played) * 100)}% de vitórias` : '';
+    $('#teamFeaturedMap').textContent = topName.toUpperCase();
+    $('#teamFeaturedSub').textContent = `${topData.played} partida(s) registrada(s) recentemente pelo elenco${wrText}.`;
+
+    const maxP = Math.max(1, ...sortedRecent.map(x => x[1].played));
+    $('#recentMapsRanking').innerHTML = sortedRecent.slice(0, 7).map(([mName, st]) => `
+      <div class="bar-row">
+        <b>${esc(mName)}</b>
+        <div class="bar"><i class="gold" style="width:${(st.played / maxP) * 100}%"></i></div>
+        <span>${st.played} jogo${st.played === 1 ? '' : 's'}</span>
+      </div>
+    `).join('');
+  } else {
+    $('#teamFeaturedMap').textContent = 'Sem histórico ainda';
+    $('#teamFeaturedSub').textContent = 'Peça aos jogadores para usarem "Buscar Perfil" na pesquisa.';
+    $('#recentMapsRanking').innerHTML = '<div class="empty">Nenhuma partida recente sincronizada ainda.</div>';
+  }
+
   ranking('#roleRanking', 'main_role');
   ranking('#bestRanking', 'best_map');
   ranking('#favoriteRanking', 'favorite_map');
@@ -849,6 +974,7 @@ function renderDashboard() {
         const role = r.main_role || r.agents?._role || 'Flex';
         const rank = r.rank_tier || r.agents?._rank || '';
         const rIcon = r.rank_icon || r.agents?._rankIcon || '';
+        const topMap = r.recent_top_map || r.agents?._topMap || '';
         return `
           <button class="player ${selectedPlayer === r.nickname ? 'active' : ''}" data-player="${esc(r.nickname)}">
             <div class="player-top">
@@ -856,7 +982,7 @@ function renderDashboard() {
               <span class="pill">${esc(role)}</span>
             </div>
             ${rank ? `<div class="player-rank">${rIcon ? `<img src="${esc(rIcon)}" alt="${esc(rank)}">` : ''}<span>${esc(rank)}</span></div>` : ''}
-            <small>Favorito: ${esc(r.favorite_map || '—')} · Melhor: ${esc(r.best_map || '—')}</small>
+            <small>${topMap ? `★ Destaque: ${esc(topMap)} · ` : ''}Favorito: ${esc(r.favorite_map || '—')}</small>
           </button>
         `;
       }).join('')
@@ -875,6 +1001,8 @@ function showProfile(nick) {
   const role = r.main_role || r.agents?._role || 'Não informada';
   const rank = r.rank_tier || r.agents?._rank || 'Não vinculado';
   const rIcon = r.rank_icon || r.agents?._rankIcon || '';
+  const topMap = r.recent_top_map || r.agents?._topMap || '';
+  const stats = r.recent_map_stats || r.agents?._mapStats || {};
 
   $('#playerProfile').innerHTML = `
     <div class="card" style="padding:16px">
@@ -884,6 +1012,7 @@ function showProfile(nick) {
           <h3 style="margin:4px 0 0;font-size:23px">${esc(r.nickname)}</h3>
         </div>
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          ${topMap ? `<span class="pill gold">★ Destaque: ${esc(topMap)}</span>` : ''}
           ${rIcon ? `<img src="${esc(rIcon)}" alt="${esc(rank)}" style="width:32px;height:32px">` : ''}
           <span class="pill">${esc(rank)}</span>
           <span class="pill" style="border-color:var(--red);color:#fff">Role: ${esc(role)}</span>
@@ -899,11 +1028,13 @@ function showProfile(nick) {
         ${MAPS.map(m => {
           const ag = r.agents?.[m] || '—';
           const icon = getAgentIcon(ag);
+          const isFeat = topMap && topMap.toLowerCase() === m.toLowerCase();
+          const mStat = stats[m];
           return `
-            <div class="profile-map">
+            <div class="profile-map ${isFeat ? 'featured' : ''}">
               ${icon ? `<img src="${icon}" alt="${esc(ag)}">` : ''}
               <div>
-                <small>${m}</small>
+                <small>${m} ${isFeat ? '★' : ''} ${mStat ? `(${mStat.played}x)` : ''}</small>
                 <b>${esc(ag)}</b>
               </div>
             </div>
@@ -947,12 +1078,16 @@ $('#surveyForm').addEventListener('submit', async e => {
 
   const rankTier = fetchedRiotProfile?.rankTier || '';
   const rankIcon = fetchedRiotProfile?.rankIcon || '';
+  const topMap = fetchedRiotProfile?.topMap || '';
+  const mapStats = fetchedRiotProfile?.mapStats || null;
 
   const agentsPayload = {
     ...selectedMapAgents,
     _role: selectedRole,
     _rank: rankTier,
-    _rankIcon: rankIcon
+    _rankIcon: rankIcon,
+    _topMap: topMap,
+    _mapStats: mapStats
   };
 
   const entry = {
@@ -960,6 +1095,8 @@ $('#surveyForm').addEventListener('submit', async e => {
     main_role: selectedRole,
     rank_tier: rankTier,
     rank_icon: rankIcon,
+    recent_top_map: topMap,
+    recent_map_stats: mapStats,
     best_map: bestMap,
     favorite_map: favoriteMap,
     least_map: leastMap,
@@ -969,10 +1106,16 @@ $('#surveyForm').addEventListener('submit', async e => {
   if (db) {
     let { error } = await db.from('team_responses').insert(entry);
     // Fallback automático caso as colunas extras ainda não existam na tabela
-    if (error && error.message && (error.message.includes('main_role') || error.message.includes('rank_tier'))) {
+    if (error && error.message && (
+      error.message.includes('main_role') ||
+      error.message.includes('rank_tier') ||
+      error.message.includes('recent_top_map')
+    )) {
       delete entry.main_role;
       delete entry.rank_tier;
       delete entry.rank_icon;
+      delete entry.recent_top_map;
+      delete entry.recent_map_stats;
       ({ error } = await db.from('team_responses').insert(entry));
     }
     if (error) {
@@ -1009,12 +1152,13 @@ $('#exportBtn').addEventListener('click', () => {
     toast('Ainda não existem respostas para exportar.');
     return;
   }
-  const cols = ['nickname', 'rank_tier', 'main_role', 'best_map', 'favorite_map', 'least_map', ...MAPS.map(m => 'agent_' + m)];
+  const cols = ['nickname', 'rank_tier', 'recent_top_map', 'main_role', 'best_map', 'favorite_map', 'least_map', ...MAPS.map(m => 'agent_' + m)];
   const rows = [
     cols,
     ...responses.map(r => [
       r.nickname,
       r.rank_tier || r.agents?._rank || '',
+      r.recent_top_map || r.agents?._topMap || '',
       r.main_role || r.agents?._role || '',
       r.best_map,
       r.favorite_map,
