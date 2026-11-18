@@ -497,7 +497,7 @@ const SUPABASE_URL = 'https://pdhbjuxdiulaarbyjaak.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_hkqIOaaPiVmqK10wmOAKWg_odZ6LIE4';
 
 // Cole sua chave gratuita da HenrikDev API aqui
-const HENRIK_API_KEY = 'HDEV-8b796292-2879-484a-86a9-adcb3098b369';
+const HENRIK_API_KEY = 'COLE_SUA_CHAVE_HENRIKDEV_AQUI';
 const REGION = 'br';
 // ================================================
 
@@ -1172,12 +1172,11 @@ $('#exportBtn').addEventListener('click', () => {
       r.main_role || r.agents?._role || '',
       r.best_map,
       r.favorite_map,
-      r.least_map,
+   r.least_map,
       ...MAPS.map(m => r.agents?.[m] || '')
     ])
   ];
-  const csv = '﻿' + rows.map(row => row.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('
-');
+  const csv = '\uFEFF' + rows.map(row => row.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
   a.download = 'ragequit-rgq-respostas.csv';
