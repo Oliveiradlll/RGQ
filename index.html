@@ -48,6 +48,7 @@ button { cursor: pointer; }
 .tab:hover, .btn:hover { border-color: #525260; }
 .tab.active, .btn.primary { background: var(--red); border-color: var(--red); color: #fff; }
 .btn.primary:hover { background: var(--red2); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
 
 .hero { padding: 38px 0 28px; display: flex; justify-content: space-between; align-items: end; gap: 20px; }
 .eyebrow { color: var(--red); font-size: 11px; font-weight: 900; letter-spacing: .22em; }
@@ -78,6 +79,21 @@ button { cursor: pointer; }
   border: 1px solid var(--line); border-radius: 10px; padding: 12px 13px; outline: none;
 }
 .field input:focus, .field select:focus { border-color: var(--red); }
+
+.nick-row { display: flex; gap: 10px; }
+.nick-row input { flex: 1; }
+
+/* Card de prévia da conta Riot */
+.riot-preview {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  background: #141419; border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px 16px; margin-bottom: 18px; flex-wrap: wrap;
+}
+.riot-preview.verified { border-color: var(--green); background: rgba(97, 214, 163, 0.06); }
+.riot-user { display: flex; align-items: center; gap: 12px; }
+.riot-user img { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; background: #23232c; }
+.riot-rank { display: flex; align-items: center; gap: 10px; }
+.riot-rank img { width: 38px; height: 38px; object-fit: contain; }
 
 /* Seletor de Roles */
 .role-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
@@ -183,13 +199,15 @@ button { cursor: pointer; }
   border: 1px solid var(--line); border-radius: 999px;
   padding: 4px 9px; color: var(--muted); font-size: 11px;
 }
-.player-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+.player-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
 .player {
   padding: 13px; background: #141419; border: 1px solid var(--line);
   border-radius: 12px; text-align: left; color: var(--text); transition: .15s;
 }
 .player:hover, .player.active { border-color: var(--red); background: #1a1a22; }
-.player-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 4px; }
+.player-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 6px; }
+.player-rank { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #d8d6de; margin-bottom: 4px; }
+.player-rank img { width: 20px; height: 20px; object-fit: contain; }
 .player small { color: var(--muted); display: block; }
 
 .profile-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
@@ -218,6 +236,7 @@ button { cursor: pointer; }
   .status { display: inline-block; margin-top: 18px; }
   .span8, .span6, .span4 { grid-column: span 12; }
   .role-grid { grid-template-columns: repeat(2, 1fr); }
+  .nick-row { flex-direction: column; }
   .top { align-items: flex-start; flex-direction: column; }
   .nav { width: 100%; }
   .nav button { flex: 1; }
@@ -241,7 +260,7 @@ button { cursor: pointer; }
     <div>
       <div class="eyebrow">KNOW YOUR TEAM.</div>
       <h1>MAPAS. AGENTES.<br><span style="color:var(--red)">ESTRATÉGIA.</span></h1>
-      <p>Descubra onde o time rende melhor, qual função cada jogador domina e qual agente escolhe como principal em cada mapa.</p>
+      <p>Sincronize sua conta Valorant para puxar seu Elo e sugerir automaticamente seus agentes principais por mapa.</p>
     </div>
     <div class="status" id="connection"><b>●</b> Modo demonstração</div>
   </section>
@@ -251,19 +270,39 @@ button { cursor: pointer; }
     <section id="survey" class="view grid">
       <div class="card span12">
         <h2 class="section-title">Pesquisa do jogador</h2>
-        <p class="sub">Preencha suas preferências. Clique nos cards para escolher sua função e os retratos dos agentes.</p>
+        <p class="sub">Digite seu Riot ID e clique em <b>Buscar Perfil</b> para carregar seu Elo e preencher seus agentes recentes.</p>
         <div class="notice" id="setupNotice">Modo local ativo. Configure o Supabase para sincronizar entre dispositivos.</div>
 
         <form id="surveyForm">
-          <div class="grid">
-            <div class="field span6">
-              <label for="nickname">1. Seu nickname *</label>
-              <input id="nickname" maxlength="24" required placeholder="Ex.: Player#BR1">
+          <div class="field">
+            <label for="nickname">1. Seu Riot ID (Nome#TAG) *</label>
+            <div class="nick-row">
+              <input id="nickname" maxlength="28" required placeholder="Ex.: Aspas#BR1">
+              <button type="button" class="btn" id="fetchRiotBtn">🔍 Buscar Perfil</button>
             </div>
-            <div class="field span12">
-              <label>2. Qual é a sua melhor função (Role) no time? *</label>
-              <div class="role-grid" id="roleSelector"></div>
+          </div>
+
+          <!-- Prévia do Perfil Valorant -->
+          <div id="riotPreview" class="riot-preview hidden">
+            <div class="riot-user">
+              <img id="riotCardImg" src="" alt="Card">
+              <div>
+                <strong id="riotFullNick" style="font-size:16px">Player#BR1</strong>
+                <small class="muted" id="riotLevelText" style="display:block">Nível -- · Região BR</small>
+              </div>
             </div>
+            <div class="riot-rank">
+              <img id="riotRankImg" src="" alt="Elo">
+              <div>
+                <small class="muted" style="display:block;font-size:11px">ELO ATUAL</small>
+                <strong id="riotRankName">Sem Rank</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>2. Qual é a sua melhor função (Role) no time? *</label>
+            <div class="role-grid" id="roleSelector"></div>
           </div>
 
           <div class="grid" style="margin-top:8px">
@@ -282,12 +321,12 @@ button { cursor: pointer; }
           </div>
 
           <h3 class="section-title" style="margin-top:10px">6. Seu agente principal em cada mapa *</h3>
-          <p class="sub">Clique em cada mapa abaixo para abrir o seletor visual de agentes.</p>
+          <p class="sub">Se você buscou seu perfil acima, sugerimos os agentes das suas últimas partidas. Clique para ajustar se quiser.</p>
           <div class="map-grid" id="agentFields"></div>
 
           <div class="actions" style="margin-top:24px">
             <button class="btn primary" type="submit">Enviar minha resposta ↗</button>
-            <span class="hint">Suas escolhas ficarão visíveis no dashboard do time.</span>
+            <span class="hint">Suas escolhas e seu Elo ficarão visíveis no dashboard do time.</span>
           </div>
         </form>
       </div>
@@ -299,7 +338,7 @@ button { cursor: pointer; }
         <div class="profile-head">
           <div>
             <h2 class="section-title">Visão geral do time</h2>
-            <p class="sub" style="margin-bottom:0">Preferências, funções e agentes consolidados de todos os jogadores.</p>
+            <p class="sub" style="margin-bottom:0">Preferências, elos, funções e agentes consolidados de todos os jogadores.</p>
           </div>
           <span class="pill" id="responseCount">0 respostas</span>
         </div>
@@ -347,7 +386,7 @@ button { cursor: pointer; }
 
       <div class="card span12">
         <h3 class="section-title">Perfis dos jogadores</h3>
-        <p class="sub">Clique em um jogador para ver sua função e pool de agentes por mapa.</p>
+        <p class="sub">Clique em um jogador para ver seu Elo, função e pool de agentes por mapa.</p>
         <div class="player-list" id="playerList"></div>
         <div id="playerProfile" style="margin-top:18px"></div>
       </div>
@@ -355,7 +394,7 @@ button { cursor: pointer; }
       <div class="card span12">
         <div class="actions">
           <button class="btn" id="exportBtn">Exportar respostas (CSV)</button>
-          <span class="hint">Exporta nickname, função principal, mapas e todos os agentes escolhidos.</span>
+          <span class="hint">Exporta nickname, elo, função principal, mapas e agentes escolhidos.</span>
         </div>
       </div>
     </section>
@@ -388,8 +427,14 @@ button { cursor: pointer; }
 <div id="toast" class="toast hidden"></div>
 
 <script>
+// ================= CONFIGURAÇÃO =================
 const SUPABASE_URL = 'https://pdhbjuxdiulaarbyjaak.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_hkqIOaaPiVmqK10wmOAKWg_odZ6LIE4';
+
+// Cole sua chave gratuita da HenrikDev API aqui (ex: 'HDEV-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx')
+const HENRIK_API_KEY = 'HDEV-be01e91e-fb7f-46c3-bd90-c802fb6cd985';
+const REGION = 'br'; // 'br', 'na', 'eu', 'ap', 'kr', 'latam'
+// ================================================
 
 const MAPS = ['Abyss', 'Bind', 'Corrode', 'Haven', 'Lotus', 'Sunset', 'Summit'];
 
@@ -400,7 +445,6 @@ const ROLES = [
   { id: 'Sentinela', desc: 'Defesa e controle de flanco', icon: 'https://media.valorant-api.com/agents/roles/5fc02f99-4091-4486-a531-98459a3e95e9/displayicon.png' }
 ];
 
-// Lista completa de agentes com função e fallback de retrato
 const AGENTS_DATA = [
   { name: 'Astra', role: 'Controlador' }, { name: 'Breach', role: 'Iniciador' },
   { name: 'Brimstone', role: 'Controlador' }, { name: 'Chamber', role: 'Sentinela' },
@@ -425,19 +469,154 @@ let db = null;
 let responses = [];
 let selectedPlayer = null;
 let selectedRole = '';
-let selectedMapAgents = {}; // { Abyss: 'Jett', ... }
+let selectedMapAgents = {};
+let suggestedMaps = {}; // Marca quais mapas foram preenchidos automaticamente pela API
 let activeModalMap = null;
 let activeRoleFilter = 'ALL';
-let agentIcons = {}; // Mapeado dinamicamente via valorant-api.com
+let agentIcons = {};
+let fetchedRiotProfile = null; // { name, tag, rankTier, rankIcon }
 
 function toast(msg) {
   const t = $('#toast');
   t.textContent = msg;
   t.classList.remove('hidden');
-  setTimeout(() => t.classList.add('hidden'), 3400);
+  setTimeout(() => t.classList.add('hidden'), 3600);
 }
 
-// Busca retratos oficiais na valorant-api.com (sem quebrar caso offline)
+// ================= INTEGRAÇÃO HENRIKDEV API =================
+async function fetchValorantProfile() {
+  const raw = $('#nickname').value.trim();
+  if (!raw.includes('#')) {
+    toast('Digite no formato Nome#TAG (ex: Player#BR1).');
+    return;
+  }
+
+  if (!HENRIK_API_KEY || HENRIK_API_KEY === 'COLE_SUA_CHAVE_HENRIKDEV_AQUI') {
+    toast('Configure sua HENRIK_API_KEY no código HTML primeiro.');
+    return;
+  }
+
+  const [namePart, tagPart] = raw.split('#');
+  const name = encodeURIComponent(namePart.trim());
+  const tag = encodeURIComponent(tagPart.trim());
+  const headers = { 'Authorization': HENRIK_API_KEY };
+
+  const btn = $('#fetchRiotBtn');
+  btn.disabled = true;
+  btn.textContent = 'Buscando...';
+
+  try {
+    // 1. Busca dados básicos da conta (Nome oficial, Nível, Card)
+    const accRes = await fetch(`https://api.henrikdev.xyz/valorant/v1/account/${name}/${tag}`, { headers });
+    const accJson = await accRes.json();
+
+    if (accRes.status !== 200 || !accJson.data) {
+      throw new Error(accJson.errors?.[0]?.message || 'Conta não encontrada. Verifique Nome e #TAG.');
+    }
+
+    const acc = accJson.data;
+    const officialNick = `${acc.name}#${acc.tag}`;
+    $('#nickname').value = officialNick;
+
+    // 2. Busca Elo atual (MMR)
+    let rankTier = 'Unranked';
+    let rankIcon = '';
+    try {
+      const mmrRes = await fetch(`https://api.henrikdev.xyz/valorant/v1/mmr/${REGION}/${name}/${tag}`, { headers });
+      const mmrJson = await mmrRes.json();
+      if (mmrRes.status === 200 && mmrJson.data) {
+        rankTier = mmrJson.data.currenttierpatched || 'Unranked';
+        rankIcon = mmrJson.data.images?.small || '';
+      }
+    } catch {}
+
+    fetchedRiotProfile = { name: acc.name, tag: acc.tag, rankTier, rankIcon };
+
+    // Atualiza card visual no formulário
+    $('#riotCardImg').src = acc.card?.small || '';
+    $('#riotFullNick').textContent = officialNick;
+    $('#riotLevelText').textContent = `Nível ${acc.account_level || '—'} · Região ${acc.region?.toUpperCase() || 'BR'}`;
+    $('#riotRankName').textContent = rankTier;
+    if (rankIcon) {
+      $('#riotRankImg').src = rankIcon;
+      $('#riotRankImg').classList.remove('hidden');
+    } else {
+      $('#riotRankImg').classList.add('hidden');
+    }
+    $('#riotPreview').classList.add('verified');
+    $('#riotPreview').classList.remove('hidden');
+
+    // 3. Busca últimas partidas para sugerir agentes por mapa e role mais jogada
+    try {
+      const matchRes = await fetch(`https://api.henrikdev.xyz/valorant/v3/matches/${REGION}/${name}/${tag}?size=15`, { headers });
+      const matchJson = await matchRes.json();
+      if (matchRes.status === 200 && Array.isArray(matchJson.data)) {
+        const mapAgentCounts = {}; // { Haven: { Jett: 3, Omen: 1 } }
+        const roleCounts = {};
+
+        matchJson.data.forEach(match => {
+          const mapName = match.metadata?.map;
+          const me = match.players?.all_players?.find(
+            p => p.name.toLowerCase() === acc.name.toLowerCase() && p.tag.toLowerCase() === acc.tag.toLowerCase()
+          );
+          if (me && me.character) {
+            const agent = me.character;
+            const role = getAgentRole(agent);
+            if (role) roleCounts[role] = (roleCounts[role] || 0) + 1;
+
+            if (MAPS.includes(mapName)) {
+              mapAgentCounts[mapName] = mapAgentCounts[mapName] || {};
+              mapAgentCounts[mapName][agent] = (mapAgentCounts[mapName][agent] || 0) + 1;
+            }
+          }
+        });
+
+        // Preenche mapas que ainda não foram escolhidos manualmente
+        let autoFilledCount = 0;
+        MAPS.forEach(m => {
+          if (!selectedMapAgents[m] && mapAgentCounts[m]) {
+            const topAgent = Object.entries(mapAgentCounts[m]).sort((a, b) => b[1] - a[1])[0][0];
+            if (AGENTS_DATA.some(a => a.name.toLowerCase() === topAgent.toLowerCase())) {
+              selectedMapAgents[m] = topAgent;
+              suggestedMaps[m] = true;
+              autoFilledCount++;
+            }
+          }
+        });
+
+        // Sugere a role mais jogada se o usuário ainda não clicou em nenhuma
+        if (!selectedRole && Object.keys(roleCounts).length) {
+          selectedRole = Object.entries(roleCounts).sort((a, b) => b[1] - a[1])[0][0];
+          renderRoleSelector();
+        }
+
+        renderMapCards();
+        toast(autoFilledCount
+          ? `Perfil carregado! ${autoFilledCount} mapa(s) preenchidos com base no seu histórico.`
+          : 'Perfil e Elo carregados com sucesso!');
+      } else {
+        toast('Perfil e Elo carregados com sucesso!');
+      }
+    } catch {
+      toast('Perfil e Elo carregados!');
+    }
+  } catch (err) {
+    toast(err.message || 'Erro ao consultar a API do Valorant.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔍 Buscar Perfil';
+  }
+}
+
+$('#fetchRiotBtn').addEventListener('click', fetchValorantProfile);
+$('#nickname').addEventListener('blur', () => {
+  const val = $('#nickname').value.trim();
+  if (val.includes('#') && (!fetchedRiotProfile || `${fetchedRiotProfile.name}#${fetchedRiotProfile.tag}`.toLowerCase() !== val.toLowerCase())) {
+    fetchValorantProfile();
+  }
+});
+
+// ================= RETRATOS E UI =================
 async function loadAgentIcons() {
   try {
     const res = await fetch('https://valorant-api.com/v1/agents?isPlayableCharacter=true');
@@ -449,14 +628,11 @@ async function loadAgentIcons() {
       renderMapCards();
       if (!$('#dashboard').classList.contains('hidden')) renderDashboard();
     }
-  } catch (e) {
-    // Fallback silencioso para iniciais caso a API externa falhe
-  }
+  } catch {}
 }
 
 function getAgentIcon(name) {
-  if (!name) return '';
-  return agentIcons[name.toLowerCase()] || '';
+  return name ? (agentIcons[name.toLowerCase()] || '') : '';
 }
 
 function getAgentRole(name) {
@@ -464,7 +640,6 @@ function getAgentRole(name) {
   return found ? found.role : '';
 }
 
-// Renderiza seletor visual de Roles
 function renderRoleSelector() {
   $('#roleSelector').innerHTML = ROLES.map(r => `
     <button type="button" class="role-btn ${selectedRole === r.id ? 'selected' : ''}" data-role="${r.id}">
@@ -484,17 +659,17 @@ function renderRoleSelector() {
   });
 }
 
-// Renderiza os cards de mapa com prévia visual do agente
 function renderMapCards() {
   $('#agentFields').innerHTML = MAPS.map(m => {
     const chosen = selectedMapAgents[m] || '';
     const icon = getAgentIcon(chosen);
     const role = getAgentRole(chosen);
+    const isAuto = suggestedMaps[m];
     return `
       <div class="map-card ${chosen ? 'filled' : ''}">
         <div class="map-head">
           <span>${m.toUpperCase()}</span>
-          ${role ? `<span class="pill">${role}</span>` : ''}
+          ${role ? `<span class="pill">${isAuto ? '★ ' : ''}${role}</span>` : ''}
         </div>
         <button type="button" class="agent-trigger" data-open-map="${m}">
           ${icon
@@ -503,7 +678,7 @@ function renderMapCards() {
           }
           <div class="agent-info">
             <strong>${chosen ? esc(chosen) : 'Selecionar agente'}</strong>
-            <small>${chosen ? 'Clique para trocar' : 'Escolha seu main neste mapa'}</small>
+            <small>${chosen ? (isAuto ? 'Sugerido do histórico · Trocar' : 'Clique para trocar') : 'Escolha seu main neste mapa'}</small>
           </div>
         </button>
       </div>
@@ -515,10 +690,9 @@ function renderMapCards() {
   });
 }
 
-// Controle do Modal de Agentes
 function openAgentModal(mapName) {
   activeModalMap = mapName;
-  activeRoleFilter = selectedRole || 'ALL'; // Pré-filtra pela role do jogador se já escolhida
+  activeRoleFilter = selectedRole || 'ALL';
   $('#modalMapLabel').textContent = `MAPA: ${mapName.toUpperCase()}`;
   updateFilterChips();
   renderModalAgents();
@@ -556,6 +730,7 @@ function renderModalAgents() {
     btn.addEventListener('click', () => {
       if (activeModalMap) {
         selectedMapAgents[activeModalMap] = btn.dataset.pickAgent;
+        delete suggestedMaps[activeModalMap];
         renderMapCards();
       }
       closeAgentModal();
@@ -599,7 +774,7 @@ async function init() {
       responses = data || [];
       $('#connection').innerHTML = '<b>●</b> Banco online conectado';
       $('#setupNotice').classList.add('hidden');
-    } catch (e) {
+    } catch {
       $('#connection').textContent = 'Banco indisponível';
       toast('Não foi possível carregar o banco. Usando modo local.');
       responses = localLoad();
@@ -672,12 +847,15 @@ function renderDashboard() {
   $('#playerList').innerHTML = n
     ? responses.slice().sort((a, b) => a.nickname.localeCompare(b.nickname, 'pt-BR')).map(r => {
         const role = r.main_role || r.agents?._role || 'Flex';
+        const rank = r.rank_tier || r.agents?._rank || '';
+        const rIcon = r.rank_icon || r.agents?._rankIcon || '';
         return `
           <button class="player ${selectedPlayer === r.nickname ? 'active' : ''}" data-player="${esc(r.nickname)}">
             <div class="player-top">
               <strong>${esc(r.nickname)}</strong>
               <span class="pill">${esc(role)}</span>
             </div>
+            ${rank ? `<div class="player-rank">${rIcon ? `<img src="${esc(rIcon)}" alt="${esc(rank)}">` : ''}<span>${esc(rank)}</span></div>` : ''}
             <small>Favorito: ${esc(r.favorite_map || '—')} · Melhor: ${esc(r.best_map || '—')}</small>
           </button>
         `;
@@ -695,6 +873,8 @@ function showProfile(nick) {
   const r = responses.find(x => x.nickname === nick);
   if (!r) return;
   const role = r.main_role || r.agents?._role || 'Não informada';
+  const rank = r.rank_tier || r.agents?._rank || 'Não vinculado';
+  const rIcon = r.rank_icon || r.agents?._rankIcon || '';
 
   $('#playerProfile').innerHTML = `
     <div class="card" style="padding:16px">
@@ -703,7 +883,11 @@ function showProfile(nick) {
           <div class="eyebrow">PLAYER PROFILE</div>
           <h3 style="margin:4px 0 0;font-size:23px">${esc(r.nickname)}</h3>
         </div>
-        <span class="pill" style="border-color:var(--red);color:#fff">Role: ${esc(role)}</span>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          ${rIcon ? `<img src="${esc(rIcon)}" alt="${esc(rank)}" style="width:32px;height:32px">` : ''}
+          <span class="pill">${esc(rank)}</span>
+          <span class="pill" style="border-color:var(--red);color:#fff">Role: ${esc(role)}</span>
+        </div>
       </div>
       <div class="grid" style="margin:16px 0">
         <div class="span4"><small class="muted">MELHOR DESEMPENHO</small><br><b>${esc(r.best_map)}</b></div>
@@ -761,11 +945,21 @@ $('#surveyForm').addEventListener('submit', async e => {
     return;
   }
 
-  // Guarda _role dentro de agents também para compatibilidade caso a coluna main_role ainda não exista no Supabase
-  const agentsPayload = { ...selectedMapAgents, _role: selectedRole };
+  const rankTier = fetchedRiotProfile?.rankTier || '';
+  const rankIcon = fetchedRiotProfile?.rankIcon || '';
+
+  const agentsPayload = {
+    ...selectedMapAgents,
+    _role: selectedRole,
+    _rank: rankTier,
+    _rankIcon: rankIcon
+  };
+
   const entry = {
     nickname,
     main_role: selectedRole,
+    rank_tier: rankTier,
+    rank_icon: rankIcon,
     best_map: bestMap,
     favorite_map: favoriteMap,
     least_map: leastMap,
@@ -774,9 +968,11 @@ $('#surveyForm').addEventListener('submit', async e => {
 
   if (db) {
     let { error } = await db.from('team_responses').insert(entry);
-    // Fallback automático caso a coluna main_role ainda não tenha sido criada no banco
-    if (error && error.message && error.message.includes('main_role')) {
+    // Fallback automático caso as colunas extras ainda não existam na tabela
+    if (error && error.message && (error.message.includes('main_role') || error.message.includes('rank_tier'))) {
       delete entry.main_role;
+      delete entry.rank_tier;
+      delete entry.rank_icon;
       ({ error } = await db.from('team_responses').insert(entry));
     }
     if (error) {
@@ -799,6 +995,9 @@ $('#surveyForm').addEventListener('submit', async e => {
   e.target.reset();
   selectedRole = '';
   selectedMapAgents = {};
+  suggestedMaps = {};
+  fetchedRiotProfile = null;
+  $('#riotPreview').classList.add('hidden');
   renderRoleSelector();
   renderMapCards();
   toast('Resposta enviada! Obrigado por participar.');
@@ -810,11 +1009,12 @@ $('#exportBtn').addEventListener('click', () => {
     toast('Ainda não existem respostas para exportar.');
     return;
   }
-  const cols = ['nickname', 'main_role', 'best_map', 'favorite_map', 'least_map', ...MAPS.map(m => 'agent_' + m)];
+  const cols = ['nickname', 'rank_tier', 'main_role', 'best_map', 'favorite_map', 'least_map', ...MAPS.map(m => 'agent_' + m)];
   const rows = [
     cols,
     ...responses.map(r => [
       r.nickname,
+      r.rank_tier || r.agents?._rank || '',
       r.main_role || r.agents?._role || '',
       r.best_map,
       r.favorite_map,
