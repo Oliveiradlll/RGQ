@@ -1,59 +1,836 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101014"><title>VALORANT TEAM HUB</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101014">
+<title>VALORANT TEAM HUB</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#101014;--panel:#19191f;--panel2:#222229;--line:#34343d;--text:#f4f2f2;--muted:#a6a4ad;--red:#ff4655;--red2:#c52f3c;--green:#61d6a3;--radius:16px}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -15%,#3a151d 0,transparent 38%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}button,input,select{font:inherit}button{cursor:pointer}.wrap{max-width:1180px;margin:auto;padding:24px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0 24px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.08em}.mark{width:38px;height:38px;background:var(--red);clip-path:polygon(0 0,100% 0,76% 100%,0 75%);display:grid;place-items:center;color:#fff;font-weight:1000}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.22em}.nav{display:flex;gap:8px}.tab,.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:10px 15px;border-radius:10px;font-weight:700}.tab.active,.btn.primary{background:var(--red);border-color:var(--red);color:#fff}.hero{padding:38px 0 28px;display:flex;justify-content:space-between;align-items:end;gap:20px}.eyebrow{color:var(--red);font-size:11px;font-weight:900;letter-spacing:.22em}.hero h1{font-size:clamp(34px,6vw,64px);line-height:.98;margin:10px 0 14px;letter-spacing:-.05em}.hero p{max-width:620px;color:var(--muted);margin:0}.status{border:1px solid var(--line);background:#17171d;padding:10px 13px;border-radius:999px;color:var(--muted);font-size:12px;white-space:nowrap}.status b{color:var(--green)}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{background:linear-gradient(145deg,#1c1c23,#17171c);border:1px solid var(--line);border-radius:var(--radius);padding:20px;min-width:0}.span12{grid-column:span 12}.span8{grid-column:span 8}.span6{grid-column:span 6}.span4{grid-column:span 4}.section-title{font-size:18px;margin:0 0 5px}.sub{color:var(--muted);font-size:13px;margin:0 0 18px}.field{margin:0 0 16px}.field label{display:block;font-weight:750;font-size:13px;margin:0 0 7px}.field input,.field select{width:100%;background:#111116;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px 13px;outline:none}.field input:focus,.field select:focus{border-color:var(--red)}.map-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.map-field{background:#141419;border:1px solid var(--line);border-radius:12px;padding:12px}.map-field label{display:block;font-size:12px;font-weight:850;letter-spacing:.08em;margin-bottom:8px}.actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.hint{font-size:12px;color:var(--muted)}.notice{padding:12px 14px;border:1px solid #694047;background:#28191d;border-radius:10px;color:#f3c7cc;font-size:13px;margin-bottom:15px}.metric{font-size:32px;font-weight:900;letter-spacing:-.04em}.metric-label{font-size:12px;color:var(--muted)}.bar-row{display:grid;grid-template-columns:90px 1fr 42px;align-items:center;gap:10px;margin:12px 0;font-size:13px}.bar{height:9px;background:#303039;border-radius:20px;overflow:hidden}.bar i{height:100%;display:block;background:var(--red);border-radius:20px}.rank{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:10px 0}.rank:last-child{border:0}.pill{border:1px solid var(--line);border-radius:999px;padding:4px 9px;color:var(--muted);font-size:11px}.player-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}.player{padding:13px;background:#141419;border:1px solid var(--line);border-radius:12px;text-align:left;color:var(--text)}.player strong{display:block}.player small{color:var(--muted)}.profile-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.profile-maps{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}.profile-map{background:#141419;border:1px solid var(--line);padding:12px;border-radius:11px}.profile-map small{display:block;color:var(--muted);font-size:11px}.profile-map b{display:block;margin-top:4px}.empty{color:var(--muted);padding:18px;text-align:center;border:1px dashed var(--line);border-radius:12px}.hidden{display:none!important}.footer{color:var(--muted);font-size:11px;text-align:center;padding:28px 0}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#24242b;border:1px solid var(--line);padding:12px 18px;border-radius:10px;z-index:5;max-width:90%;box-shadow:0 12px 40px #0008}.danger{color:#ff9aa2}.muted{color:var(--muted)}@media(max-width:760px){.wrap{padding:16px}.hero{display:block;padding-top:28px}.status{display:inline-block;margin-top:18px}.span8,.span6,.span4{grid-column:span 12}.map-grid{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.nav{width:100%}.nav button{flex:1}.bar-row{grid-template-columns:75px 1fr 35px}}
-</style></head>
-<body><div class="wrap">
-<header class="top"><div class="brand"><div class="mark">V</div><div>VALORANT TEAM HUB<small>TEAM ANALYTICS / PLAYER SURVEY</small></div></div><nav class="nav"><button class="tab active" data-view="survey">Pesquisa</button><button class="tab" data-view="dashboard">Dashboard</button></nav></header>
-<section class="hero"><div><div class="eyebrow">KNOW YOUR TEAM.</div><h1>MAPAS. AGENTES.<br><span style="color:var(--red)">ESTRATÉGIA.</span></h1><p>Descubra onde o time rende melhor, quais mapas prefere e qual agente cada jogador escolhe como principal em cada cenário.</p></div><div class="status" id="connection"><b>●</b> Modo demonstração</div></section>
-<main>
-<section id="survey" class="view grid">
-<div class="card span12"><h2 class="section-title">Pesquisa do jogador</h2><p class="sub">Preencha suas preferências. Cada nickname pode enviar uma resposta. Os resultados serão compartilhados com todo o time.</p><div class="notice" id="setupNotice">Esta é uma prévia funcional em modo local. Para compartilhar respostas entre dispositivos, configure o Supabase seguindo o README incluído no projeto.</div>
-<form id="surveyForm"><div class="field"><label for="nickname">Seu nickname *</label><input id="nickname" maxlength="24" required placeholder="Ex.: Player#BR1"></div>
-<div class="grid"><div class="field span4"><label for="bestMap">Em qual mapa você acredita jogar melhor? *</label><select id="bestMap" required></select></div><div class="field span4"><label for="favoriteMap">Qual mapa você mais gosta de jogar? *</label><select id="favoriteMap" required></select></div><div class="field span4"><label for="leastMap">Qual mapa você menos gosta de jogar? *</label><select id="leastMap" required></select></div></div>
-<h3 class="section-title">Seu agente principal em cada mapa</h3><p class="sub">Escolha exatamente um agente por mapa. Você pode repetir o mesmo agente em mapas diferentes.</p><div class="map-grid" id="agentFields"></div>
-<div class="actions" style="margin-top:20px"><button class="btn primary" type="submit">Enviar minha resposta ↗</button><span class="hint">Ao enviar, você concorda que seu nickname e suas escolhas ficarão visíveis no dashboard do time.</span></div></form></div>
-</section>
-<section id="dashboard" class="view hidden grid">
-<div class="card span12"><div class="profile-head"><div><h2 class="section-title">Visão geral do time</h2><p class="sub" style="margin-bottom:0">Preferências consolidadas de todos os jogadores participantes.</p></div><span class="pill" id="responseCount">0 respostas</span></div></div>
-<div class="card span4"><div class="metric" id="playersMetric">0</div><div class="metric-label">JOGADORES PARTICIPANTES</div></div><div class="card span4"><div class="metric">7</div><div class="metric-label">MAPAS ANALISADOS</div></div><div class="card span4"><div class="metric" id="agentsMetric">0</div><div class="metric-label">AGENTES DIFERENTES ESCOLHIDOS</div></div>
-<div class="card span6"><h3 class="section-title">Mapa em que o time acredita jogar melhor</h3><p class="sub">Votos para melhor desempenho percebido.</p><div id="bestRanking"></div></div>
-<div class="card span6"><h3 class="section-title">Mapas favoritos</h3><p class="sub">O que o time mais gosta de jogar.</p><div id="favoriteRanking"></div></div>
-<div class="card span6"><h3 class="section-title">Mapas menos favoritos</h3><p class="sub">Mapas que receberam mais votos de rejeição.</p><div id="leastRanking"></div></div>
-<div class="card span6"><h3 class="section-title">Agente principal por mapa</h3><p class="sub">Agente mais escolhido em cada mapa.</p><div id="agentRanking"></div></div>
-<div class="card span12"><h3 class="section-title">Perfis dos jogadores</h3><p class="sub">Selecione um jogador para consultar suas respostas e escolhas por mapa.</p><div class="player-list" id="playerList"></div><div id="playerProfile" style="margin-top:18px"></div></div>
-<div class="card span12"><div class="actions"><button class="btn" id="exportBtn">Exportar respostas (CSV)</button><span class="hint">Os dados exibidos refletem as respostas disponíveis neste ambiente.</span></div></div>
-</section></main><footer class="footer">VALORANT TEAM HUB · FAN-MADE TEAM TOOL · NÃO É UM PRODUTO OFICIAL DA RIOT GAMES</footer></div><div id="toast" class="toast hidden"></div>
+:root {
+  --bg: #101014;
+  --panel: #19191f;
+  --panel2: #222229;
+  --line: #34343d;
+  --text: #f4f2f2;
+  --muted: #a6a4ad;
+  --red: #ff4655;
+  --red2: #c52f3c;
+  --green: #61d6a3;
+  --radius: 16px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: radial-gradient(ellipse at 80% -15%, #3a151d 0, transparent 38%), var(--bg);
+  color: var(--text);
+  font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+.wrap { max-width: 1180px; margin: auto; padding: 24px; }
+.top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 10px 0 24px; border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 900; letter-spacing: .08em; }
+.mark {
+  width: 38px; height: 38px; background: var(--red);
+  clip-path: polygon(0 0, 100% 0, 76% 100%, 0 75%);
+  display: grid; place-items: center; color: #fff; font-weight: 1000;
+}
+.brand small { display: block; color: var(--muted); font-size: 10px; letter-spacing: .22em; }
+.nav { display: flex; gap: 8px; }
+.tab, .btn {
+  border: 1px solid var(--line); background: var(--panel); color: var(--text);
+  padding: 10px 15px; border-radius: 10px; font-weight: 700; transition: .15s;
+}
+.tab:hover, .btn:hover { border-color: #525260; }
+.tab.active, .btn.primary { background: var(--red); border-color: var(--red); color: #fff; }
+.btn.primary:hover { background: var(--red2); }
+
+.hero { padding: 38px 0 28px; display: flex; justify-content: space-between; align-items: end; gap: 20px; }
+.eyebrow { color: var(--red); font-size: 11px; font-weight: 900; letter-spacing: .22em; }
+.hero h1 { font-size: clamp(34px, 6vw, 64px); line-height: .98; margin: 10px 0 14px; letter-spacing: -.05em; }
+.hero p { max-width: 620px; color: var(--muted); margin: 0; }
+.status {
+  border: 1px solid var(--line); background: #17171d; padding: 10px 13px;
+  border-radius: 999px; color: var(--muted); font-size: 12px; white-space: nowrap;
+}
+.status b { color: var(--green); }
+
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+.card {
+  background: linear-gradient(145deg, #1c1c23, #17171c);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; min-width: 0;
+}
+.span12 { grid-column: span 12; }
+.span8 { grid-column: span 8; }
+.span6 { grid-column: span 6; }
+.span4 { grid-column: span 4; }
+.section-title { font-size: 18px; margin: 0 0 5px; }
+.sub { color: var(--muted); font-size: 13px; margin: 0 0 18px; }
+
+.field { margin: 0 0 16px; }
+.field label { display: block; font-weight: 750; font-size: 13px; margin: 0 0 7px; }
+.field input, .field select {
+  width: 100%; background: #111116; color: var(--text);
+  border: 1px solid var(--line); border-radius: 10px; padding: 12px 13px; outline: none;
+}
+.field input:focus, .field select:focus { border-color: var(--red); }
+
+/* Seletor de Roles */
+.role-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.role-btn {
+  display: flex; align-items: center; gap: 10px; padding: 12px;
+  background: #141419; border: 1px solid var(--line); border-radius: 12px;
+  color: var(--text); text-align: left; transition: .15s;
+}
+.role-btn:hover { border-color: #555564; background: #1a1a22; }
+.role-btn.selected {
+  border-color: var(--red); background: rgba(255, 70, 85, 0.14);
+  box-shadow: 0 0 0 1px var(--red);
+}
+.role-btn img { width: 22px; height: 22px; object-fit: contain; }
+.role-btn strong { display: block; font-size: 13px; }
+.role-btn small { display: block; font-size: 11px; color: var(--muted); }
+
+/* Cards de Mapas + Agente Visual */
+.map-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.map-card {
+  background: #141419; border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px; display: flex; flex-direction: column; gap: 10px; transition: .15s;
+}
+.map-card.filled { border-color: #454552; }
+.map-head { display: flex; justify-content: space-between; align-items: center; }
+.map-head span { font-size: 12px; font-weight: 850; letter-spacing: .08em; }
+.agent-trigger {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  background: #101014; border: 1px dashed var(--line); border-radius: 10px;
+  padding: 8px 10px; color: var(--text); text-align: left; transition: .15s;
+}
+.map-card.filled .agent-trigger { border-style: solid; border-color: #3a3a46; background: #191921; }
+.agent-trigger:hover { border-color: var(--red); }
+.agent-avatar {
+  width: 42px; height: 42px; border-radius: 8px; background: #22222b;
+  object-fit: cover; flex-shrink: 0; display: grid; place-items: center;
+  color: var(--muted); font-weight: 800; font-size: 16px;
+}
+.agent-info strong { display: block; font-size: 14px; }
+.agent-info small { display: block; font-size: 11px; color: var(--muted); }
+
+/* Modal de Seleção de Agente */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(8, 8, 12, 0.82);
+  backdrop-filter: blur(4px); z-index: 20; display: grid; place-items: center; padding: 16px;
+}
+.modal {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 18px;
+  width: 100%; max-width: 720px; max-height: 85vh; display: flex; flex-direction: column;
+  overflow: hidden; box-shadow: 0 24px 60px #000a;
+}
+.modal-head {
+  padding: 16px 20px; border-bottom: 1px solid var(--line);
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+}
+.modal-filters {
+  padding: 12px 20px; border-bottom: 1px solid var(--line);
+  display: flex; gap: 8px; flex-wrap: wrap; background: #15151a;
+}
+.filter-chip {
+  border: 1px solid var(--line); background: var(--panel); color: var(--muted);
+  padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
+}
+.filter-chip.active { background: var(--red); border-color: var(--red); color: #fff; }
+.modal-body {
+  padding: 16px 20px; overflow-y: auto;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 10px;
+}
+.agent-option {
+  background: #141419; border: 1px solid var(--line); border-radius: 12px;
+  padding: 10px 8px; text-align: center; color: var(--text); transition: .12s;
+}
+.agent-option:hover { border-color: var(--red); transform: translateY(-2px); background: #1e1e26; }
+.agent-option img {
+  width: 56px; height: 56px; border-radius: 10px; background: #23232c;
+  object-fit: cover; margin: 0 auto 6px; display: block;
+}
+.agent-option span { display: block; font-size: 12px; font-weight: 700; }
+.agent-option small { display: block; font-size: 10px; color: var(--muted); }
+
+.actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.hint { font-size: 12px; color: var(--muted); }
+.notice {
+  padding: 12px 14px; border: 1px solid #694047; background: #28191d;
+  border-radius: 10px; color: #f3c7cc; font-size: 13px; margin-bottom: 15px;
+}
+.metric { font-size: 32px; font-weight: 900; letter-spacing: -.04em; }
+.metric-label { font-size: 12px; color: var(--muted); }
+.bar-row {
+  display: grid; grid-template-columns: 105px 1fr 52px;
+  align-items: center; gap: 10px; margin: 12px 0; font-size: 13px;
+}
+.bar { height: 9px; background: #303039; border-radius: 20px; overflow: hidden; }
+.bar i { height: 100%; display: block; background: var(--red); border-radius: 20px; }
+.rank {
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--line); padding: 10px 0;
+}
+.rank:last-child { border: 0; }
+.rank-agent { display: flex; align-items: center; gap: 10px; }
+.rank-agent img { width: 28px; height: 28px; border-radius: 6px; background: #23232c; }
+.pill {
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 4px 9px; color: var(--muted); font-size: 11px;
+}
+.player-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+.player {
+  padding: 13px; background: #141419; border: 1px solid var(--line);
+  border-radius: 12px; text-align: left; color: var(--text); transition: .15s;
+}
+.player:hover, .player.active { border-color: var(--red); background: #1a1a22; }
+.player-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 4px; }
+.player small { color: var(--muted); display: block; }
+
+.profile-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.profile-maps { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px; }
+.profile-map {
+  background: #141419; border: 1px solid var(--line); padding: 10px;
+  border-radius: 11px; display: flex; align-items: center; gap: 10px;
+}
+.profile-map img { width: 38px; height: 38px; border-radius: 8px; background: #23232c; }
+.profile-map small { display: block; color: var(--muted); font-size: 11px; }
+.profile-map b { display: block; font-size: 13px; }
+
+.empty { color: var(--muted); padding: 18px; text-align: center; border: 1px dashed var(--line); border-radius: 12px; }
+.hidden { display: none !important; }
+.footer { color: var(--muted); font-size: 11px; text-align: center; padding: 28px 0; }
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: #24242b; border: 1px solid var(--red); padding: 12px 18px;
+  border-radius: 10px; z-index: 30; max-width: 90%; box-shadow: 0 12px 40px #000a;
+}
+.muted { color: var(--muted); }
+
+@media (max-width: 760px) {
+  .wrap { padding: 16px; }
+  .hero { display: block; padding-top: 28px; }
+  .status { display: inline-block; margin-top: 18px; }
+  .span8, .span6, .span4 { grid-column: span 12; }
+  .role-grid { grid-template-columns: repeat(2, 1fr); }
+  .top { align-items: flex-start; flex-direction: column; }
+  .nav { width: 100%; }
+  .nav button { flex: 1; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="mark">V</div>
+      <div>VALORANT TEAM HUB<small>TEAM ANALYTICS / PLAYER SURVEY</small></div>
+    </div>
+    <nav class="nav">
+      <button class="tab active" data-view="survey">Pesquisa</button>
+      <button class="tab" data-view="dashboard">Dashboard</button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">KNOW YOUR TEAM.</div>
+      <h1>MAPAS. AGENTES.<br><span style="color:var(--red)">ESTRATÉGIA.</span></h1>
+      <p>Descubra onde o time rende melhor, qual função cada jogador domina e qual agente escolhe como principal em cada mapa.</p>
+    </div>
+    <div class="status" id="connection"><b>●</b> Modo demonstração</div>
+  </section>
+
+  <main>
+    <!-- ABA PESQUISA -->
+    <section id="survey" class="view grid">
+      <div class="card span12">
+        <h2 class="section-title">Pesquisa do jogador</h2>
+        <p class="sub">Preencha suas preferências. Clique nos cards para escolher sua função e os retratos dos agentes.</p>
+        <div class="notice" id="setupNotice">Modo local ativo. Configure o Supabase para sincronizar entre dispositivos.</div>
+
+        <form id="surveyForm">
+          <div class="grid">
+            <div class="field span6">
+              <label for="nickname">1. Seu nickname *</label>
+              <input id="nickname" maxlength="24" required placeholder="Ex.: Player#BR1">
+            </div>
+            <div class="field span12">
+              <label>2. Qual é a sua melhor função (Role) no time? *</label>
+              <div class="role-grid" id="roleSelector"></div>
+            </div>
+          </div>
+
+          <div class="grid" style="margin-top:8px">
+            <div class="field span4">
+              <label for="bestMap">3. Mapa em que joga melhor *</label>
+              <select id="bestMap" required></select>
+            </div>
+            <div class="field span4">
+              <label for="favoriteMap">4. Mapa favorito *</label>
+              <select id="favoriteMap" required></select>
+            </div>
+            <div class="field span4">
+              <label for="leastMap">5. Mapa que menos gosta *</label>
+              <select id="leastMap" required></select>
+            </div>
+          </div>
+
+          <h3 class="section-title" style="margin-top:10px">6. Seu agente principal em cada mapa *</h3>
+          <p class="sub">Clique em cada mapa abaixo para abrir o seletor visual de agentes.</p>
+          <div class="map-grid" id="agentFields"></div>
+
+          <div class="actions" style="margin-top:24px">
+            <button class="btn primary" type="submit">Enviar minha resposta ↗</button>
+            <span class="hint">Suas escolhas ficarão visíveis no dashboard do time.</span>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ABA DASHBOARD -->
+    <section id="dashboard" class="view hidden grid">
+      <div class="card span12">
+        <div class="profile-head">
+          <div>
+            <h2 class="section-title">Visão geral do time</h2>
+            <p class="sub" style="margin-bottom:0">Preferências, funções e agentes consolidados de todos os jogadores.</p>
+          </div>
+          <span class="pill" id="responseCount">0 respostas</span>
+        </div>
+      </div>
+
+      <div class="card span4">
+        <div class="metric" id="playersMetric">0</div>
+        <div class="metric-label">JOGADORES PARTICIPANTES</div>
+      </div>
+      <div class="card span4">
+        <div class="metric">7</div>
+        <div class="metric-label">MAPAS ANALISADOS</div>
+      </div>
+      <div class="card span4">
+        <div class="metric" id="agentsMetric">0</div>
+        <div class="metric-label">AGENTES DIFERENTES ESCOLHIDOS</div>
+      </div>
+
+      <div class="card span6">
+        <h3 class="section-title">Funções (Roles) do time</h3>
+        <p class="sub">Distribuição da função principal de cada jogador.</p>
+        <div id="roleRanking"></div>
+      </div>
+      <div class="card span6">
+        <h3 class="section-title">Agente mais escolhido por mapa</h3>
+        <p class="sub">Destaque de pick principal em cada cenário.</p>
+        <div id="agentRanking"></div>
+      </div>
+
+      <div class="card span4">
+        <h3 class="section-title">Melhor desempenho</h3>
+        <p class="sub">Onde o time rende mais.</p>
+        <div id="bestRanking"></div>
+      </div>
+      <div class="card span4">
+        <h3 class="section-title">Mapas favoritos</h3>
+        <p class="sub">Mais votados para jogar.</p>
+        <div id="favoriteRanking"></div>
+      </div>
+      <div class="card span4">
+        <h3 class="section-title">Menos favoritos</h3>
+        <p class="sub">Maior rejeição do time.</p>
+        <div id="leastRanking"></div>
+      </div>
+
+      <div class="card span12">
+        <h3 class="section-title">Perfis dos jogadores</h3>
+        <p class="sub">Clique em um jogador para ver sua função e pool de agentes por mapa.</p>
+        <div class="player-list" id="playerList"></div>
+        <div id="playerProfile" style="margin-top:18px"></div>
+      </div>
+
+      <div class="card span12">
+        <div class="actions">
+          <button class="btn" id="exportBtn">Exportar respostas (CSV)</button>
+          <span class="hint">Exporta nickname, função principal, mapas e todos os agentes escolhidos.</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">VALORANT TEAM HUB · FAN-MADE TEAM TOOL · NÃO É UM PRODUTO OFICIAL DA RIOT GAMES</footer>
+</div>
+
+<!-- MODAL DE SELEÇÃO DE AGENTE -->
+<div id="agentModal" class="modal-backdrop hidden">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="eyebrow" id="modalMapLabel">MAPA</div>
+        <h3 style="margin:2px 0 0">Selecione seu agente</h3>
+      </div>
+      <button type="button" class="btn" id="closeModalBtn">✕ Fechar</button>
+    </div>
+    <div class="modal-filters" id="modalFilters">
+      <button type="button" class="filter-chip active" data-role-filter="ALL">Todos</button>
+      <button type="button" class="filter-chip" data-role-filter="Duelista">Duelistas</button>
+      <button type="button" class="filter-chip" data-role-filter="Iniciador">Iniciadores</button>
+      <button type="button" class="filter-chip" data-role-filter="Controlador">Controladores</button>
+      <button type="button" class="filter-chip" data-role-filter="Sentinela">Sentinelas</button>
+    </div>
+    <div class="modal-body" id="modalAgentGrid"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
 <script>
-// CONFIGURAÇÃO: preencha URL e anon key do seu projeto Supabase para ativar sincronização online.
 const SUPABASE_URL = 'https://pdhbjuxdiulaarbyjaak.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_hkqIOaaPiVmqK10wmOAKWg_odZ6LIE4';
-const MAPS = ['Abyss','Bind','Corrode','Haven','Lotus','Sunset','Summit'];
-// Lista editável. Atualize este array quando novos agentes forem lançados.
-const AGENTS = ['Astra','Breach','Brimstone','Chamber','Clove','Cypher','Deadlock','Fade','Gekko','Harbor','Iso','Jett','KAY/O','Killjoy','Neon','Omen','Phoenix','Raze','Reyna','Sage','Skye','Sova','Tejo','Viper','Vyse','Waylay','Yoru','Miks'];
-const $=s=>document.querySelector(s); const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let db=null, responses=[], selectedPlayer=null;
-function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),3200)}
-function fillSelect(el,items,placeholder){el.innerHTML=`<option value="">${placeholder}</option>`+items.map(x=>`<option>${esc(x)}</option>`).join('')}
-[...['#bestMap','#favoriteMap','#leastMap']].forEach(s=>fillSelect($(s),MAPS,'Selecione um mapa'));
-$('#agentFields').innerHTML=MAPS.map(m=>`<div class="map-field"><label>${m.toUpperCase()}</label><select required data-map="${m}"><option value="">Escolha seu agente principal</option>${AGENTS.map(a=>`<option>${esc(a)}</option>`).join('')}</select></div>`).join('');
-function localLoad(){try{return JSON.parse(localStorage.getItem('vth_responses')||'[]')}catch{return []}}
-function localSave(){localStorage.setItem('vth_responses',JSON.stringify(responses))}
-async function init(){if(SUPABASE_URL&&SUPABASE_ANON_KEY&&window.supabase){db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);$('#connection').innerHTML='<b>●</b> Conectando ao banco…';try{const {data,error}=await db.from('team_responses').select('*').order('created_at',{ascending:true});if(error)throw error;responses=data||[];$('#connection').innerHTML='<b>●</b> Banco online conectado';$('#setupNotice').classList.add('hidden')}catch(e){$('#connection').textContent='Banco indisponível';toast('Não foi possível carregar o banco. Verifique a configuração Supabase.');responses=localLoad()}}else{responses=localLoad()}renderDashboard()}
-function voteCount(key){const c={};responses.forEach(r=>{const v=r[key];if(v)c[v]=(c[v]||0)+1});return Object.entries(c).sort((a,b)=>b[1]-a[1])}
-function ranking(target,key){const data=voteCount(key),max=Math.max(1,...data.map(x=>x[1]));$(target).innerHTML=data.length?data.map(([name,n])=>`<div class="bar-row"><b>${esc(name)}</b><div class="bar"><i style="width:${n/max*100}%"></i></div><span>${n} voto${n===1?'':'s'}</span></div>`).join(''):'<div class="empty">Ainda não há respostas.</div>'}
-function renderDashboard(){const n=responses.length;$('#playersMetric').textContent=n;$('#responseCount').textContent=`${n} resposta${n===1?'':'s'}`;const agents=new Set(responses.flatMap(r=>Object.values(r.agents||{})));$('#agentsMetric').textContent=agents.size;ranking('#bestRanking','best_map');ranking('#favoriteRanking','favorite_map');ranking('#leastRanking','least_map');
-$('#agentRanking').innerHTML=MAPS.map(m=>{const c={};responses.forEach(r=>{const a=r.agents?.[m];if(a)c[a]=(c[a]||0)+1});const sorted=Object.entries(c).sort((a,b)=>b[1]-a[1]);return `<div class="rank"><span><b>${m}</b><small class="muted"> · ${sorted.length?esc(sorted[0][0]):'Sem votos'}</small></span><span class="pill">${sorted.length?sorted[0][1]+' voto(s)':'—'}</span></div>`}).join('');
-$('#playerList').innerHTML=n?responses.slice().sort((a,b)=>a.nickname.localeCompare(b.nickname,'pt-BR')).map(r=>`<button class="player" data-player="${esc(r.nickname)}"><strong>${esc(r.nickname)}</strong><small>Favorito: ${esc(r.favorite_map||'—')} · Melhor: ${esc(r.best_map||'—')}</small></button>`).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum jogador respondeu ainda. Compartilhe o link da pesquisa com o time!</div>';
-document.querySelectorAll('[data-player]').forEach(b=>b.addEventListener('click',()=>showProfile(b.dataset.player)));if(selectedPlayer&&responses.some(r=>r.nickname===selectedPlayer))showProfile(selectedPlayer);else $('#playerProfile').innerHTML='';}
-function showProfile(nick){selectedPlayer=nick;const r=responses.find(x=>x.nickname===nick);if(!r)return;$('#playerProfile').innerHTML=`<div class="card" style="padding:16px"><div class="profile-head"><div><div class="eyebrow">PLAYER PROFILE</div><h3 style="margin:4px 0 0;font-size:23px">${esc(r.nickname)}</h3></div><span class="pill">Perfil individual</span></div><div class="grid" style="margin:16px 0"><div class="span4"><small class="muted">MELHOR DESEMPENHO</small><br><b>${esc(r.best_map)}</b></div><div class="span4"><small class="muted">MAPA FAVORITO</small><br><b>${esc(r.favorite_map)}</b></div><div class="span4"><small class="muted">MENOS FAVORITO</small><br><b>${esc(r.least_map)}</b></div></div><h4 style="margin:0 0 10px">Agente principal por mapa</h4><div class="profile-maps">${MAPS.map(m=>`<div class="profile-map"><small>${m}</small><b>${esc(r.agents?.[m]||'—')}</b></div>`).join('')}</div></div>`}
-function switchView(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('hidden',x.id!==v));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.view===v));if(v==='dashboard')renderDashboard()}
-document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));
-$('#surveyForm').addEventListener('submit',async e=>{e.preventDefault();const nickname=$('#nickname').value.trim();if(!nickname)return;const agents={};document.querySelectorAll('[data-map]').forEach(s=>agents[s.dataset.map]=s.value);const entry={nickname,best_map:$('#bestMap').value,favorite_map:$('#favoriteMap').value,least_map:$('#leastMap').value,agents};if(Object.values(agents).some(x=>!x)){toast('Escolha um agente para cada um dos sete mapas.');return}if(db){const {error}=await db.from('team_responses').insert(entry);if(error){toast(error.code==='23505'?'Este nickname já enviou uma resposta. Peça ao responsável para corrigir.':'Erro ao enviar: '+error.message);return}const {data}=await db.from('team_responses').select('*').order('created_at',{ascending:true});responses=data||[]}else{if(responses.some(r=>r.nickname.toLowerCase()===nickname.toLowerCase())){toast('Este nickname já enviou uma resposta neste navegador.');return}responses.push(entry);localSave()}e.target.reset();toast('Resposta enviada! Obrigado por participar.');switchView('dashboard')});
-$('#exportBtn').addEventListener('click',()=>{if(!responses.length){toast('Ainda não existem respostas para exportar.');return}const cols=['nickname','best_map','favorite_map','least_map',...MAPS.map(m=>'agent_'+m)];const rows=[cols,...responses.map(r=>[r.nickname,r.best_map,r.favorite_map,r.least_map,...MAPS.map(m=>r.agents?.[m]||'')])];const csv='\ufeff'+rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='valorant-team-hub-respostas.csv';a.click();URL.revokeObjectURL(a.href)});
+
+const MAPS = ['Abyss', 'Bind', 'Corrode', 'Haven', 'Lotus', 'Sunset', 'Summit'];
+
+const ROLES = [
+  { id: 'Duelista', desc: 'Entrada e impacto', icon: 'https://media.valorant-api.com/agents/roles/dbe8757e-9e92-4ed4-b39f-9dfc589691d4/displayicon.png' },
+  { id: 'Iniciador', desc: 'Info e criação de espaço', icon: 'https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png' },
+  { id: 'Controlador', desc: 'Smokes e controle de área', icon: 'https://media.valorant-api.com/agents/roles/4ee40330-ecdd-4f2f-98a8-eb1243428373/displayicon.png' },
+  { id: 'Sentinela', desc: 'Defesa e controle de flanco', icon: 'https://media.valorant-api.com/agents/roles/5fc02f99-4091-4486-a531-98459a3e95e9/displayicon.png' }
+];
+
+// Lista completa de agentes com função e fallback de retrato
+const AGENTS_DATA = [
+  { name: 'Astra', role: 'Controlador' }, { name: 'Breach', role: 'Iniciador' },
+  { name: 'Brimstone', role: 'Controlador' }, { name: 'Chamber', role: 'Sentinela' },
+  { name: 'Clove', role: 'Controlador' }, { name: 'Cypher', role: 'Sentinela' },
+  { name: 'Deadlock', role: 'Sentinela' }, { name: 'Fade', role: 'Iniciador' },
+  { name: 'Gekko', role: 'Iniciador' }, { name: 'Harbor', role: 'Controlador' },
+  { name: 'Iso', role: 'Duelista' }, { name: 'Jett', role: 'Duelista' },
+  { name: 'KAY/O', role: 'Iniciador' }, { name: 'Killjoy', role: 'Sentinela' },
+  { name: 'Miks', role: 'Controlador' }, { name: 'Neon', role: 'Duelista' },
+  { name: 'Omen', role: 'Controlador' }, { name: 'Phoenix', role: 'Duelista' },
+  { name: 'Raze', role: 'Duelista' }, { name: 'Reyna', role: 'Duelista' },
+  { name: 'Sage', role: 'Sentinela' }, { name: 'Skye', role: 'Iniciador' },
+  { name: 'Sova', role: 'Iniciador' }, { name: 'Tejo', role: 'Iniciador' },
+  { name: 'Viper', role: 'Controlador' }, { name: 'Vyse', role: 'Sentinela' },
+  { name: 'Waylay', role: 'Duelista' }, { name: 'Yoru', role: 'Duelista' }
+];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+let db = null;
+let responses = [];
+let selectedPlayer = null;
+let selectedRole = '';
+let selectedMapAgents = {}; // { Abyss: 'Jett', ... }
+let activeModalMap = null;
+let activeRoleFilter = 'ALL';
+let agentIcons = {}; // Mapeado dinamicamente via valorant-api.com
+
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  setTimeout(() => t.classList.add('hidden'), 3400);
+}
+
+// Busca retratos oficiais na valorant-api.com (sem quebrar caso offline)
+async function loadAgentIcons() {
+  try {
+    const res = await fetch('https://valorant-api.com/v1/agents?isPlayableCharacter=true');
+    const json = await res.json();
+    if (json.data) {
+      json.data.forEach(a => {
+        agentIcons[a.displayName.toLowerCase()] = a.displayIcon;
+      });
+      renderMapCards();
+      if (!$('#dashboard').classList.contains('hidden')) renderDashboard();
+    }
+  } catch (e) {
+    // Fallback silencioso para iniciais caso a API externa falhe
+  }
+}
+
+function getAgentIcon(name) {
+  if (!name) return '';
+  return agentIcons[name.toLowerCase()] || '';
+}
+
+function getAgentRole(name) {
+  const found = AGENTS_DATA.find(a => a.name.toLowerCase() === String(name).toLowerCase());
+  return found ? found.role : '';
+}
+
+// Renderiza seletor visual de Roles
+function renderRoleSelector() {
+  $('#roleSelector').innerHTML = ROLES.map(r => `
+    <button type="button" class="role-btn ${selectedRole === r.id ? 'selected' : ''}" data-role="${r.id}">
+      <img src="${r.icon}" alt="${r.id}" onerror="this.style.display='none'">
+      <div>
+        <strong>${r.id}</strong>
+        <small>${r.desc}</small>
+      </div>
+    </button>
+  `).join('');
+
+  document.querySelectorAll('.role-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedRole = btn.dataset.role;
+      renderRoleSelector();
+    });
+  });
+}
+
+// Renderiza os cards de mapa com prévia visual do agente
+function renderMapCards() {
+  $('#agentFields').innerHTML = MAPS.map(m => {
+    const chosen = selectedMapAgents[m] || '';
+    const icon = getAgentIcon(chosen);
+    const role = getAgentRole(chosen);
+    return `
+      <div class="map-card ${chosen ? 'filled' : ''}">
+        <div class="map-head">
+          <span>${m.toUpperCase()}</span>
+          ${role ? `<span class="pill">${role}</span>` : ''}
+        </div>
+        <button type="button" class="agent-trigger" data-open-map="${m}">
+          ${icon
+            ? `<img class="agent-avatar" src="${icon}" alt="${esc(chosen)}">`
+            : `<div class="agent-avatar">${chosen ? esc(chosen[0]) : '+'}</div>`
+          }
+          <div class="agent-info">
+            <strong>${chosen ? esc(chosen) : 'Selecionar agente'}</strong>
+            <small>${chosen ? 'Clique para trocar' : 'Escolha seu main neste mapa'}</small>
+          </div>
+        </button>
+      </div>
+    `;
+  }).join('');
+
+  document.querySelectorAll('[data-open-map]').forEach(btn => {
+    btn.addEventListener('click', () => openAgentModal(btn.dataset.openMap));
+  });
+}
+
+// Controle do Modal de Agentes
+function openAgentModal(mapName) {
+  activeModalMap = mapName;
+  activeRoleFilter = selectedRole || 'ALL'; // Pré-filtra pela role do jogador se já escolhida
+  $('#modalMapLabel').textContent = `MAPA: ${mapName.toUpperCase()}`;
+  updateFilterChips();
+  renderModalAgents();
+  $('#agentModal').classList.remove('hidden');
+}
+
+function closeAgentModal() {
+  $('#agentModal').classList.add('hidden');
+  activeModalMap = null;
+}
+
+function updateFilterChips() {
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.classList.toggle('active', chip.dataset.roleFilter === activeRoleFilter);
+  });
+}
+
+function renderModalAgents() {
+  const list = AGENTS_DATA.filter(a => activeRoleFilter === 'ALL' || a.role === activeRoleFilter);
+  $('#modalAgentGrid').innerHTML = list.map(a => {
+    const icon = getAgentIcon(a.name);
+    return `
+      <button type="button" class="agent-option" data-pick-agent="${esc(a.name)}">
+        ${icon
+          ? `<img src="${icon}" alt="${esc(a.name)}">`
+          : `<div class="agent-avatar" style="margin:0 auto 6px;width:56px;height:56px">${esc(a.name[0])}</div>`
+        }
+        <span>${esc(a.name)}</span>
+        <small>${a.role}</small>
+      </button>
+    `;
+  }).join('');
+
+  document.querySelectorAll('[data-pick-agent]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (activeModalMap) {
+        selectedMapAgents[activeModalMap] = btn.dataset.pickAgent;
+        renderMapCards();
+      }
+      closeAgentModal();
+    });
+  });
+}
+
+$('#closeModalBtn').addEventListener('click', closeAgentModal);
+$('#agentModal').addEventListener('click', e => { if (e.target === $('#agentModal')) closeAgentModal(); });
+document.querySelectorAll('.filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    activeRoleFilter = chip.dataset.roleFilter;
+    updateFilterChips();
+    renderModalAgents();
+  });
+});
+
+function fillSelect(el, items, placeholder) {
+  el.innerHTML = `<option value="">${placeholder}</option>` + items.map(x => `<option>${esc(x)}</option>`).join('');
+}
+['#bestMap', '#favoriteMap', '#leastMap'].forEach(s => fillSelect($(s), MAPS, 'Selecione um mapa'));
+
+function localLoad() {
+  try { return JSON.parse(localStorage.getItem('vth_responses') || '[]'); } catch { return []; }
+}
+function localSave() {
+  localStorage.setItem('vth_responses', JSON.stringify(responses));
+}
+
+async function init() {
+  renderRoleSelector();
+  renderMapCards();
+  loadAgentIcons();
+
+  if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    $('#connection').innerHTML = '<b>●</b> Conectando ao banco…';
+    try {
+      const { data, error } = await db.from('team_responses').select('*').order('created_at', { ascending: true });
+      if (error) throw error;
+      responses = data || [];
+      $('#connection').innerHTML = '<b>●</b> Banco online conectado';
+      $('#setupNotice').classList.add('hidden');
+    } catch (e) {
+      $('#connection').textContent = 'Banco indisponível';
+      toast('Não foi possível carregar o banco. Usando modo local.');
+      responses = localLoad();
+    }
+  } else {
+    responses = localLoad();
+  }
+  renderDashboard();
+}
+
+function voteCount(key) {
+  const c = {};
+  responses.forEach(r => {
+    const v = r[key] || (key === 'main_role' ? r.agents?._role : '');
+    if (v) c[v] = (c[v] || 0) + 1;
+  });
+  return Object.entries(c).sort((a, b) => b[1] - a[1]);
+}
+
+function ranking(target, key) {
+  const data = voteCount(key);
+  const max = Math.max(1, ...data.map(x => x[1]));
+  $(target).innerHTML = data.length
+    ? data.map(([name, n]) => `
+        <div class="bar-row">
+          <b>${esc(name)}</b>
+          <div class="bar"><i style="width:${(n / max) * 100}%"></i></div>
+          <span>${n} voto${n === 1 ? '' : 's'}</span>
+        </div>
+      `).join('')
+    : '<div class="empty">Ainda não há respostas.</div>';
+}
+
+function renderDashboard() {
+  const n = responses.length;
+  $('#playersMetric').textContent = n;
+  $('#responseCount').textContent = `${n} resposta${n === 1 ? '' : 's'}`;
+
+  const agents = new Set(
+    responses.flatMap(r => Object.entries(r.agents || {}).filter(([k]) => !k.startsWith('_')).map(([, v]) => v))
+  );
+  $('#agentsMetric').textContent = agents.size;
+
+  ranking('#roleRanking', 'main_role');
+  ranking('#bestRanking', 'best_map');
+  ranking('#favoriteRanking', 'favorite_map');
+  ranking('#leastRanking', 'least_map');
+
+  $('#agentRanking').innerHTML = MAPS.map(m => {
+    const c = {};
+    responses.forEach(r => {
+      const a = r.agents?.[m];
+      if (a) c[a] = (c[a] || 0) + 1;
+    });
+    const sorted = Object.entries(c).sort((a, b) => b[1] - a[1]);
+    const topAgent = sorted.length ? sorted[0][0] : '';
+    const icon = getAgentIcon(topAgent);
+
+    return `
+      <div class="rank">
+        <div class="rank-agent">
+          ${icon ? `<img src="${icon}" alt="${esc(topAgent)}">` : ''}
+          <span><b>${m}</b><small class="muted"> · ${topAgent ? esc(topAgent) : 'Sem votos'}</small></span>
+        </div>
+        <span class="pill">${sorted.length ? sorted[0][1] + ' voto(s)' : '—'}</span>
+      </div>
+    `;
+  }).join('');
+
+  $('#playerList').innerHTML = n
+    ? responses.slice().sort((a, b) => a.nickname.localeCompare(b.nickname, 'pt-BR')).map(r => {
+        const role = r.main_role || r.agents?._role || 'Flex';
+        return `
+          <button class="player ${selectedPlayer === r.nickname ? 'active' : ''}" data-player="${esc(r.nickname)}">
+            <div class="player-top">
+              <strong>${esc(r.nickname)}</strong>
+              <span class="pill">${esc(role)}</span>
+            </div>
+            <small>Favorito: ${esc(r.favorite_map || '—')} · Melhor: ${esc(r.best_map || '—')}</small>
+          </button>
+        `;
+      }).join('')
+    : '<div class="empty" style="grid-column:1/-1">Nenhum jogador respondeu ainda. Compartilhe o link da pesquisa com o time!</div>';
+
+  document.querySelectorAll('[data-player]').forEach(b => b.addEventListener('click', () => showProfile(b.dataset.player)));
+  if (selectedPlayer && responses.some(r => r.nickname === selectedPlayer)) showProfile(selectedPlayer);
+  else $('#playerProfile').innerHTML = '';
+}
+
+function showProfile(nick) {
+  selectedPlayer = nick;
+  document.querySelectorAll('[data-player]').forEach(b => b.classList.toggle('active', b.dataset.player === nick));
+  const r = responses.find(x => x.nickname === nick);
+  if (!r) return;
+  const role = r.main_role || r.agents?._role || 'Não informada';
+
+  $('#playerProfile').innerHTML = `
+    <div class="card" style="padding:16px">
+      <div class="profile-head">
+        <div>
+          <div class="eyebrow">PLAYER PROFILE</div>
+          <h3 style="margin:4px 0 0;font-size:23px">${esc(r.nickname)}</h3>
+        </div>
+        <span class="pill" style="border-color:var(--red);color:#fff">Role: ${esc(role)}</span>
+      </div>
+      <div class="grid" style="margin:16px 0">
+        <div class="span4"><small class="muted">MELHOR DESEMPENHO</small><br><b>${esc(r.best_map)}</b></div>
+        <div class="span4"><small class="muted">MAPA FAVORITO</small><br><b>${esc(r.favorite_map)}</b></div>
+        <div class="span4"><small class="muted">MENOS FAVORITO</small><br><b>${esc(r.least_map)}</b></div>
+      </div>
+      <h4 style="margin:0 0 10px">Agente principal por mapa</h4>
+      <div class="profile-maps">
+        ${MAPS.map(m => {
+          const ag = r.agents?.[m] || '—';
+          const icon = getAgentIcon(ag);
+          return `
+            <div class="profile-map">
+              ${icon ? `<img src="${icon}" alt="${esc(ag)}">` : ''}
+              <div>
+                <small>${m}</small>
+                <b>${esc(ag)}</b>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function switchView(v) {
+  document.querySelectorAll('.view').forEach(x => x.classList.toggle('hidden', x.id !== v));
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x.dataset.view === v));
+  if (v === 'dashboard') renderDashboard();
+}
+document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => switchView(b.dataset.view)));
+
+$('#surveyForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const nickname = $('#nickname').value.trim();
+  if (!nickname) return;
+
+  if (!selectedRole) {
+    toast('Selecione a sua melhor função (Role) no time.');
+    return;
+  }
+
+  const bestMap = $('#bestMap').value;
+  const favoriteMap = $('#favoriteMap').value;
+  const leastMap = $('#leastMap').value;
+
+  if (favoriteMap === leastMap) {
+    toast('Seu mapa favorito e o menos favorito não podem ser iguais.');
+    return;
+  }
+
+  if (MAPS.some(m => !selectedMapAgents[m])) {
+    toast('Escolha um agente para cada um dos sete mapas.');
+    return;
+  }
+
+  // Guarda _role dentro de agents também para compatibilidade caso a coluna main_role ainda não exista no Supabase
+  const agentsPayload = { ...selectedMapAgents, _role: selectedRole };
+  const entry = {
+    nickname,
+    main_role: selectedRole,
+    best_map: bestMap,
+    favorite_map: favoriteMap,
+    least_map: leastMap,
+    agents: agentsPayload
+  };
+
+  if (db) {
+    let { error } = await db.from('team_responses').insert(entry);
+    // Fallback automático caso a coluna main_role ainda não tenha sido criada no banco
+    if (error && error.message && error.message.includes('main_role')) {
+      delete entry.main_role;
+      ({ error } = await db.from('team_responses').insert(entry));
+    }
+    if (error) {
+      toast(error.code === '23505'
+        ? 'Este nickname já enviou uma resposta. Peça ao responsável para corrigir.'
+        : 'Erro ao enviar: ' + error.message);
+      return;
+    }
+    const { data } = await db.from('team_responses').select('*').order('created_at', { ascending: true });
+    responses = data || [];
+  } else {
+    if (responses.some(r => r.nickname.toLowerCase() === nickname.toLowerCase())) {
+      toast('Este nickname já enviou uma resposta neste navegador.');
+      return;
+    }
+    responses.push(entry);
+    localSave();
+  }
+
+  e.target.reset();
+  selectedRole = '';
+  selectedMapAgents = {};
+  renderRoleSelector();
+  renderMapCards();
+  toast('Resposta enviada! Obrigado por participar.');
+  switchView('dashboard');
+});
+
+$('#exportBtn').addEventListener('click', () => {
+  if (!responses.length) {
+    toast('Ainda não existem respostas para exportar.');
+    return;
+  }
+  const cols = ['nickname', 'main_role', 'best_map', 'favorite_map', 'least_map', ...MAPS.map(m => 'agent_' + m)];
+  const rows = [
+    cols,
+    ...responses.map(r => [
+      r.nickname,
+      r.main_role || r.agents?._role || '',
+      r.best_map,
+      r.favorite_map,
+      r.least_map,
+      ...MAPS.map(m => r.agents?.[m] || '')
+    ])
+  ];
+  const csv = '\ufeff' + rows.map(row => row.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = 'valorant-team-hub-respostas.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
 init();
-</script></body></html>
+</script>
+</body>
+</html>
